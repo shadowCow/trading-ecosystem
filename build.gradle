@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+allprojects {
+    task hello << { task -> println "I'm $task.project.name" }
+}
+subprojects {
+    hello << {println "- I depend on the top level"}
+}
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.6'
+}

@@ -1,0 +1,7 @@
+hello.doLast {
+    println "- I'm the data model! everyone needs me!"
+}
+
+task buildIt << {
+    println "- building data-model"
+}

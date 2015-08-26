@@ -1,0 +1,12 @@
+{
+  "name": "visualization",
+  "private": true,
+  "version": "0.0.0",
+  "description": "web client visualizations for trading modules",
+  "repository": "not-setup-yet",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "shelljs": "^0.2.6"
+  }
+}  

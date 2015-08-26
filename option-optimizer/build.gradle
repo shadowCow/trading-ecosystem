@@ -1,0 +1,11 @@
+task buildIt(dependsOn: [":data-model:buildIt", ":price-data-store:buildIt"]) << {
+    println "- building option-optimizer"
+}
+
+task runIt << {
+    println "- running option-optimizer"
+}
+
+hello.doLast {
+    println "- I optimize option positions."
+}

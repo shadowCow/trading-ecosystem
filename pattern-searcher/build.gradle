@@ -1,0 +1,11 @@
+task buildIt(dependsOn: [":data-model:buildIt", ":price-data-store:buildIt"]) << {
+    println "- building pattern-searcher"
+}
+
+task runIt << {
+    println "- running pattern-searcher"
+}
+
+hello.doLast {
+    println "- I search for patterns."
+}
