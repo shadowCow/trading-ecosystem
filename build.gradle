@@ -1,6 +1,3 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'application'
 
 allprojects {
     task hello << { task -> println "I'm $task.project.name" }

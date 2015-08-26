@@ -1,3 +1,6 @@
+apply 'java'
+apply 'eclipse'
+
 hello.doLast {
     println "- I'm the data model! everyone needs me!"
 }
