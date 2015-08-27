@@ -1,0 +1,7 @@
+-the data analysis packages will be done in scala with spark.
+
+-the data model package will use groovy and json for everything.  data defined as json, and groovy will read the json and convert to the appropriate languages.
+
+-the data visualization package will be done with html/css/js.
+
+-the price data package is in flux.  the plan is to use OpenTSDB with HBase for the data store.  I'm not sure what type of scala interface we need to interact with that stuff, since spark plugs into the hadoop workflow - and that may be different than how I've done this stuff in the past.  this package may just be scala wrappers for the various data analysis packages to use...or we may not even need this package since it might be straightforward for the analysis packages to use it themselves.

@@ -1,5 +1,5 @@
-apply 'java'
-apply 'eclipse'
+apply plugin: 'java'
+apply plugin: 'eclipse'
 
 hello.doLast {
     println "- I'm the data model! everyone needs me!"
