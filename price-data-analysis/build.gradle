@@ -1,0 +1,17 @@
+apply plugin: 'scala'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.1'
+}
+
+task buildIt(dependsOn: [":data-model:buildIt", ":price-data-store:buildIt"]) << {
+    println 'building price-data-analysis'
+}
+
+task runIt << {
+    println 'running price-data-analysis'
+}
