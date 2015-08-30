@@ -1,5 +1,12 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.4'
+}
 
 hello.doLast {
     println "- I'm the data model! everyone needs me!"

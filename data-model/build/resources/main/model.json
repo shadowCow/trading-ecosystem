@@ -1,0 +1,99 @@
+{
+  "model": {
+    "valueObjects": [
+      {
+        "name": "direction",
+        "properties": [
+          {
+            "name": "multiplier",
+            "type": "integer"
+          }
+        ],
+        "values": [
+          {
+            "value": "Long",
+            "multiplier": 1
+          },
+          {
+            "value": "Short",
+            "multiplier": -1
+          },
+          {
+            "value": "Flat",
+            "multiplier": 0
+          }
+        ]
+      },
+      {
+        "name": "optionType",
+        "values": ["Put","Call"]
+      },
+    ],
+    "entities": [
+      {
+        "name": "option",
+        "fields": [
+          {
+            "name": "type",
+            "type": "optionType"
+          },
+          {
+            "name": "strike",
+            "type": "float"
+          },
+          {
+            "name": "price",
+            "type": "float"
+          },
+          {
+            "name": "expirationDate",
+            "type": "date"
+          }
+        ]
+      },
+      {
+        "name": "optionLeg",
+        "fields": [
+          {
+            "name": "direction",
+            "type": "direction"
+          },
+          {
+            "name": "option",
+            "type": "option"
+          }
+        ]
+      },
+      {
+        "name": "optionPosition",
+        "fields": [
+          {
+            "name": "options",
+            "type": "list:option"
+          }
+        ]
+      },
+      {
+        "name": "priceBar",
+        "fields": [
+          {
+            "name": "open",
+            "type": "float"
+          },
+          {
+            "name": "high",
+            "type": "float"
+          },
+          {
+            "name": "low",
+            "type": "float"
+          },
+          {
+            "name": "close",
+            "type": "float"
+          }
+        ]
+      }
+    ]
+  }
+}
