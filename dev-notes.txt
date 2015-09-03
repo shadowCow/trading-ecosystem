@@ -7,3 +7,28 @@
 -the price data package is in flux.  the plan is to use OpenTSDB with HBase for the data store.  I'm not sure what type of scala interface we need to interact with that stuff, since spark plugs into the hadoop workflow - and that may be different than how I've done this stuff in the past.  this package may just be scala wrappers for the various data analysis packages to use...or we may not even need this package since it might be straightforward for the analysis packages to use it themselves.
 
 -for analysis with spark try this project configuration: https://github.com/granthenke/spark-demo
+
+
+data analysis overview:
+methods of interest:
+-predicting rank of next bar price change (or next x bars price change) relative to past x bars:
+with this, the goal is to have a bunch of predictor variables (independent variables) and run a regression to see how things correlate to high or low ranking next bar price changes.
+
+-predicting trend changes:
+--could be several ideas here, main one is to define a trend using some criteria, and define the end of it using some criteria, and see if that ending point correlates to the price behavior over the next x bars.
+--could also include 'nested' trends or sequences of trends to make it more interesting.  e.g. the 100 bar trend is up, the 20 bar trend is down - 20 bar trend ends, but 100 trend still on, is that meaningful?  what if 20 bar trend and 100 bar trend end simultaneously?  meaningful?  regress it.
+
+-predicting x to 1 r/r moves:
+have a bunch of predictor variables, see if they are followed by x to 1 moves or not.  this is binary classification of success or failure.
+
+-predicting time spent above/below price level:
+--a bunch of predictor variables, see if they correlate to the number of bars that the price stays above or below some level. (for selling premium)
+--this could be extended to price staying above or below an arbitrary line.  i.e. we could extend a trendline forward and see how long price stays above/below the trendline (that could apply to other options strategies)
+
+implmenting data analysis:
+-we need to specify all the predictor variables that we want.  some of these are transforms of the data.  so we would have to map the data for both the predictors and dependent variable.  then run the regression.  we might want to do that ahead of time for each predictor we've got.  that would probably speed things up.
+
+-we can make a list of all predictors and their functions...and/or their datafiles.  perhaps we could set up a mechanism to automatically sync that stuff to the underlying data so that it can automatically update itself as data changes or something.  don't really need that at the moment but sounds neat.  once we have this list, we can just have a program do the same regression stuff on all these different things.
+
+-basically, the program takes some list of predictors, a method of regression, and a dataset for the dependent variable, and executes.  then we can just pass whatever combinations of those we want (or all of them) into the method.  it would output results to a database.  might want a mongo database or some other unstructured db, since we have highly variable information based on the test.  i.e. could have these 5 predictors or these 10.  sql db would need a row for each...which seems excessive - i.e. a 10 predictor test needs 10 rows plus the main test row.  that will grow FAST.  mongo could just have a json object.  we could store them based on test type somehow. i dunno.
+as far as the predictors and the dependent variable go...keep in mind that we are correlating w.r.t. time in a sense, that is, we may have 100 data points, and the predictors are from points 1-80, with the dependent variable from points 81-100, that is, we always have some datapoint representing 'now', and predictors are behind now, and dependent variable is ahead of now.  not sure if we can just lag the datasets or if we need to do something else to handle this.
