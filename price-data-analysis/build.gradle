@@ -5,14 +5,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.scala-lang:scala-library:2.10'
-
-    providedCompile([
-      'org.apache.spark:spark-core_2.10:1.4.1',
-      'org.apache.spark:spark-graphx_2.10:1.4.1',
-      'org.apache.spark:spark-mllib_2.10:1.4.1',
-      'org.apache.spark:spark-streaming_2.10:1.4.1'
-    ])
+    compile 'org.scala-lang:scala-library:2.11.6'
 }
 
 task buildIt(dependsOn: [":data-model:buildIt", ":price-data-store:buildIt"]) << {
@@ -21,4 +14,16 @@ task buildIt(dependsOn: [":data-model:buildIt", ":price-data-store:buildIt"]) <<
 
 task runIt << {
     println 'running price-data-analysis'
+}
+
+task runMyScala(dependsOn: classes, type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  maxHeapSize = "2048m"
+
+  if (project.hasProperty('myScalaMain')) {
+    main = myScalaMain
+  }
+  if (project.hasProperty('myScalaArgs')) {
+    args(myScalaArgs.split(' '))
+  }
 }

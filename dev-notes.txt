@@ -34,3 +34,4 @@ implmenting data analysis:
 as far as the predictors and the dependent variable go...keep in mind that we are correlating w.r.t. time in a sense, that is, we may have 100 data points, and the predictors are from points 1-80, with the dependent variable from points 81-100, that is, we always have some datapoint representing 'now', and predictors are behind now, and dependent variable is ahead of now.  not sure if we can just lag the datasets or if we need to do something else to handle this.
 
 -we could write different mapping functions or predictor functions as scala scripts, and annotate them appropriately.  then we could just have some other class search for those annotations and take those methods or classes or w/e as the input and use them.
+
