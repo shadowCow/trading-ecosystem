@@ -4,3 +4,6 @@
   -we may choose to annotate these different things so that a program can provide a ui to use    these different procedures however a user sees fit
   -in order to run on spark, we build everything into an uber jar (excluding spark libraries)    using 'mvn clean install', and submit the jar to a spark cluster, passing the arguments        spark needs to run the procedure (main class, jar location, args, etc)
   -we will probably build a ui tool to make it easy to submit jobs.  we may want to modularize    our analysis procedures so that we can easily chain operations without having to create new    files to do so.  i.e. from the ui, we could have buttons for different analysis procedures,    and create a chain of operations by just clicking the buttons we want in the order we want.
+
+-file setup for executing this stuff on spark...
+  i believe we can write all our analysis procedures to take all the spark stuff as parameters (like the SparkContext object and/or the dataset we are working with), and then specify the analysis procedure as an arg to our main method, and have some service that fetches the procedure and then calls it with the SparkContext that the main method creates.  then we should be able to (with some modifications probably) chain the analysis procedures relatively easily.
