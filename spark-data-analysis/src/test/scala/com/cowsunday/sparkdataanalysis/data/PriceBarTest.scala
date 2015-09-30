@@ -16,4 +16,11 @@ class PriceBarTest extends Assertions {
     assert(priceBar.getDate === 20150101)
     
   }
+  
+  @Test def testToStringWorks() {
+    val priceBar = new PriceBar(2.0, 4.0, 1.0, 3.0, 20150101)
+    val string = priceBar.toString
+    
+    assert(string === "{date: 20150101, open: 2.0, high: 4.0, low: 1.0, close: 3.0}")
+  }
 }

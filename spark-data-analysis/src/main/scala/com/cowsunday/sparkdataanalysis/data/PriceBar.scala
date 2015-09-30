@@ -29,4 +29,8 @@ class PriceBar(open: Double, high: Double, low: Double, close: Double, date: Int
   def getDate = {
     date
   }
+  
+  override def toString(): String = {
+    "{date: " + date + ", open: " + open + ", high: " + high + ", low: " + low + ", close: " + close + "}"
+  }
 }
