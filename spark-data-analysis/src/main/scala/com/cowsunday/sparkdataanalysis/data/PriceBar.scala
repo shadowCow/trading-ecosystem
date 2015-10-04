@@ -16,8 +16,30 @@ class PriceBar(open: Double, high: Double, low: Double, close: Double, date: Int
     high - low
   }
   
+  /**
+   * Returns the absolute value of (close - open)
+   */
   def getOpenCloseRange = {
     math.abs(open - close)
+  }
+  
+  /**
+   * Returns close - open
+   */
+  def getOpenCloseChange = {
+    close - open
+  }
+  
+  def isUp = {
+    close > open
+  }
+  
+  def isDown = {
+    close < open
+  } 
+  
+  def isSideways = {
+    close == open
   }
   
   def getOpen = {
@@ -42,5 +64,16 @@ class PriceBar(open: Double, high: Double, low: Double, close: Double, date: Int
   
   override def toString(): String = {
     "{date: " + date + ", open: " + open + ", high: " + high + ", low: " + low + ", close: " + close + "}"
+  }
+  
+  override def equals(obj: Any) = {
+    
+    if (obj.isInstanceOf[PriceBar]) {
+      val other = obj.asInstanceOf[PriceBar]
+      
+      other.getDate == this.getDate && other.getOpen == this.getOpen && other.getHigh == this.getHigh && other.getLow == this.getLow && other.getClose == this.getClose
+    } else {
+      false
+    }
   }
 }
