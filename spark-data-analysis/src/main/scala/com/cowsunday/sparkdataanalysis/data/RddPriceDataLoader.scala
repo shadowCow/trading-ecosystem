@@ -4,14 +4,21 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
 object RddPriceDataLoader {
+  
+  val datePattern = """(\d\d\d\d\d\d\d\d).*""".r
+  
   def loadPriceData(sparkContext: SparkContext, file: String): RDD[PriceBar] = {
-    
-    val priceData = sparkContext.textFile(file).map { line => 
+      
+    sparkContext.textFile(file).filter { 
+      line =>
+        line match {
+          case datePattern(_*) => true
+          case _ => false
+        }
+    }.map { line => 
       val values = line.split(' ')
-      val priceBar = new PriceBar(values(2).toDouble, values(3).toDouble, values(4).toDouble, values(5).toDouble, values(0).toInt)
-      priceBar
+      new PriceBar(values(2).toDouble, values(3).toDouble, values(4).toDouble, values(5).toDouble, values(0).toInt)
     }
     
-    priceData
   }
 }

@@ -66,8 +66,14 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
-			<scope>provided</scope>
+			<!-- <scope>provided</scope> -->
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.scalanlp</groupId>
 			<artifactId>breeze_2.10</artifactId>
@@ -146,6 +152,6 @@
 
 		</plugins>
 	</build>
-	
-  
+
+
 </project>

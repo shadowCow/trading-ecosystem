@@ -1,7 +1,17 @@
 package com.cowsunday.sparkdataanalysis.data
 
-class PriceBar(open: Double, high: Double, low: Double, close: Double, date: Integer) {
+@SerialVersionUID(1986L)
+class PriceBar(open: Double, high: Double, low: Double, close: Double, date: Integer) extends Serializable {
 
+  def getPrice(priceType: PriceType.Value): Double = {
+    priceType match {
+      case PriceType.Open => open
+      case PriceType.High => high
+      case PriceType.Low => low
+      case PriceType.Close => close
+    }  
+  }
+  
   def getHighLowRange = {
     high - low
   }
