@@ -25,7 +25,7 @@ things to predict:
 
 metrics to use for prediction:
 -largest price change in x periods?
--rank of price change out of past x periods?
+-rank of price change out of past x periods? (done)
 -series of largest price changes
 -smallest price change in x periods?
 -series of smallest price changes in x periods
