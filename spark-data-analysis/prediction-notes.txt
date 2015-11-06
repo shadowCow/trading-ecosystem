@@ -24,18 +24,18 @@ things to predict:
 -was the market price range in the bottom x of the past y days?
 
 metrics to use for prediction:
--largest price change in x periods?
--rank of price change out of past x periods? (done)
+(done)-largest price change in x periods? (done)
+(done)-rank of price change out of past x periods? (done)
 -series of largest price changes
--smallest price change in x periods?
+(done)-smallest price change in x periods? (done)
 -series of smallest price changes in x periods
--sequence of smallest/largets price changes
--first up day in x periods
--first down day in x periods
--smallest up day in series of up days
--smallest down day in series of down days
--largest up day in series of up days
--largest down day in series of down days
+-sequence of smallest/largest price changes
+(done)-first up day in x periods (done)
+(done)-first down day in x periods (done)
+(done)-smallest up day in series of up days (done)
+(done)-smallest down day in series of down days (done)
+(done)-largest up day in series of up days (done)
+(done)-largest down day in series of down days (done)
 -price change bigger than range of past x periods
 -up day bigger than range of past x periods
 -down day bigger than range of past x periods
@@ -43,8 +43,8 @@ metrics to use for prediction:
 -first down day in x periods, also bigger than range of y periods
 -first up day bigger than any down day in x periods
 -first down day bigger than any up day in x periods
--highest price in past x periods
--lowest price in past x periods
+(done)-highest price in past x periods (done)
+(done)-lowest price in past x periods (done)
 -count of new highs made in past x periods
 -count of new lows made in past x periods
 -ratio of open-close range to high-low range
