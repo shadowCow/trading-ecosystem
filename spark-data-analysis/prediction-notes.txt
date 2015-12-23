@@ -26,7 +26,7 @@ things to predict:
 metrics to use for prediction:
 (done)-largest price change in x periods? (done)
 (done)-rank of price change out of past x periods? (done)
--series of largest price changes
+(done)-series of largest price changes (done)
 (done)-smallest price change in x periods? (done)
 -series of smallest price changes in x periods
 -sequence of smallest/largest price changes
@@ -47,7 +47,7 @@ metrics to use for prediction:
 (done)-lowest price in past x periods (done)
 -count of new highs made in past x periods
 -count of new lows made in past x periods
--ratio of open-close range to high-low range
+(done)-ratio of open-close range to high-low range (done)
 -ratio of up movement to down movement in past periods (i.e. sum(close - open for up bars) / sum(open - close for down bars))
 
 
