@@ -23,6 +23,8 @@ things to predict:
 -was the market price range in the top x of the past y days?
 -was the market price range in the bottom x of the past y days?
 
+^ these are the classifications.  we can either do yes/no for each one, or we can have bins (e.g. 2to1 gain, 3to1 gain, 4to1 gain, etc)
+
 metrics to use for prediction:
 (done)-largest price change in x periods? (done)
 (done)-rank of price change out of past x periods? (done)
@@ -36,7 +38,7 @@ metrics to use for prediction:
 (done)-smallest down day in series of down days (done)
 (done)-largest up day in series of up days (done)
 (done)-largest down day in series of down days (done)
--price change bigger than range of past x periods
+(done)-price change bigger than range of past x periods (done)
 -up day bigger than range of past x periods
 -down day bigger than range of past x periods
 -first up day in x periods, also bigger than range of y periods
