@@ -8,11 +8,15 @@ package com.cowsunday.options
  */
 class LinearValueInterval(val start: Double, val end: Double, val valueAtStart: Double, val valueAtEnd: Double) {
   def isPositiveValuesOnly(): Boolean = {
-    valueAtStart >= 0 && valueAtEnd >= 0
+    (valueAtStart >= 0 && valueAtEnd >= 0) && !isZeroValuesOnly()
   }
   
   def isNegativeValuesOnly(): Boolean = {
-    valueAtStart <= 0 && valueAtEnd <= 0
+    (valueAtStart <= 0 && valueAtEnd <= 0) && !isZeroValuesOnly()
+  }
+  
+  def isZeroValuesOnly(): Boolean = {
+    valueAtStart == 0 && valueAtEnd == 0
   }
   
   def maxValue(): Double = {
@@ -21,6 +25,10 @@ class LinearValueInterval(val start: Double, val end: Double, val valueAtStart: 
   
   def minValue(): Double = {
     math.min(valueAtStart, valueAtEnd)
+  }
+  
+  override def toString(): String = {
+    "{\"start\":\"" + start + "\",\"end\":\"" + end + "\",\"valueAtStart\":\"" + valueAtStart + "\",\"valueAtEnd\":\"" + valueAtEnd + "\"}"
   }
 }
 

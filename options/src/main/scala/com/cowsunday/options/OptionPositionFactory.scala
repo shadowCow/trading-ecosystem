@@ -170,22 +170,6 @@ object OptionPositionFactory {
   
   def longIronButterfly(symbol: String, strikePriceLower: Double, strikePriceMiddle: Double, strikePriceUpper: Double, expirationDate: Instant, entryPriceLower: Double, entryPriceMiddle: Double, entryPriceUpper: Double, quantity: Int): OptionPosition = {
     val lower = new Option(symbol, OptionType.PUT, strikePriceLower, expirationDate)
-    val lowerLeg = new OptionLeg(lower, entryPriceLower, quantity, PositionDirection.SHORT)
-    
-    val middlePut = new Option(symbol, OptionType.PUT, strikePriceMiddle, expirationDate)
-    val middlePutLeg = new OptionLeg(middlePut, entryPriceMiddle, quantity, PositionDirection.LONG)
-    
-    val middleCall = new Option(symbol, OptionType.CALL, strikePriceMiddle, expirationDate)
-    val middleCallLeg = new OptionLeg(middleCall, entryPriceMiddle, quantity, PositionDirection.LONG)
-    
-    val upper = new Option(symbol, OptionType.CALL, strikePriceUpper, expirationDate)
-    val upperLeg = new OptionLeg(upper, entryPriceUpper, quantity, PositionDirection.SHORT)
-    
-    new OptionPosition(List(lowerLeg, middlePutLeg, middleCallLeg, upperLeg))
-  }
-  
-  def shortIronButterfly(symbol: String, strikePriceLower: Double, strikePriceMiddle: Double, strikePriceUpper: Double, expirationDate: Instant, entryPriceLower: Double, entryPriceMiddle: Double, entryPriceUpper: Double, quantity: Int): OptionPosition = {
-    val lower = new Option(symbol, OptionType.PUT, strikePriceLower, expirationDate)
     val lowerLeg = new OptionLeg(lower, entryPriceLower, quantity, PositionDirection.LONG)
     
     val middlePut = new Option(symbol, OptionType.PUT, strikePriceMiddle, expirationDate)
@@ -196,6 +180,22 @@ object OptionPositionFactory {
     
     val upper = new Option(symbol, OptionType.CALL, strikePriceUpper, expirationDate)
     val upperLeg = new OptionLeg(upper, entryPriceUpper, quantity, PositionDirection.LONG)
+    
+    new OptionPosition(List(lowerLeg, middlePutLeg, middleCallLeg, upperLeg))
+  }
+  
+  def shortIronButterfly(symbol: String, strikePriceLower: Double, strikePriceMiddle: Double, strikePriceUpper: Double, expirationDate: Instant, entryPriceLower: Double, entryPriceMiddle: Double, entryPriceUpper: Double, quantity: Int): OptionPosition = {
+    val lower = new Option(symbol, OptionType.PUT, strikePriceLower, expirationDate)
+    val lowerLeg = new OptionLeg(lower, entryPriceLower, quantity, PositionDirection.SHORT)
+    
+    val middlePut = new Option(symbol, OptionType.PUT, strikePriceMiddle, expirationDate)
+    val middlePutLeg = new OptionLeg(middlePut, entryPriceMiddle, quantity, PositionDirection.LONG)
+    
+    val middleCall = new Option(symbol, OptionType.CALL, strikePriceMiddle, expirationDate)
+    val middleCallLeg = new OptionLeg(middleCall, entryPriceMiddle, quantity, PositionDirection.LONG)
+    
+    val upper = new Option(symbol, OptionType.CALL, strikePriceUpper, expirationDate)
+    val upperLeg = new OptionLeg(upper, entryPriceUpper, quantity, PositionDirection.SHORT)
     
     new OptionPosition(List(lowerLeg, middlePutLeg, middleCallLeg, upperLeg))
   }

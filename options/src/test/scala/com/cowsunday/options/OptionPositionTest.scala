@@ -168,7 +168,7 @@ class OptionPositionTest extends Assertions {
   @Test def testShortStraddle() {
     val straddle = OptionPositionFactory.shortStraddle("spy", 100, Instant.now, 2, 2, 10)
     assert(straddle.maxGain == 4000)
-    assert(straddle.maxLoss == Double.NegativeInfinity)
+    assert(straddle.maxLoss == Double.NegativeInfinity, "actual max loss: " + straddle.maxLoss)
     
     // profitable below
     assert(straddle.getValueAtExpiration(90) == -6000)
@@ -237,8 +237,124 @@ class OptionPositionTest extends Assertions {
   }
   
   @Test def testLongCallButterfly() {
-    val butterfly = OptionPositionFactory.longCallButterfly("spy", 95, 100, 105, Instant.now, 1, 2, 1, 10)
-    assert(butterfly.maxGain == 2000)
+    val butterfly = OptionPositionFactory.longCallButterfly("spy", 95, 100, 105, Instant.now, 4, 2, 1, 10)
+    assert(butterfly.maxGain == 4000, "max gain was: " + butterfly.maxGain)
+    assert(butterfly.maxLoss == -1000)
+    
+    // below lower strike
+    assert(butterfly.getValueAtExpiration(90) == -1000)
+    // at lower strike
+    assert(butterfly.getValueAtExpiration(95) == -1000)
+    // between lower and middle
+    assert(butterfly.getValueAtExpiration(95.5) == -500)
+    // break even lower
+    assert(butterfly.getValueAtExpiration(96) == 0)
+    // profitable lower
+    assert(butterfly.getValueAtExpiration(99) == 3000)
+    // at middle
+    assert(butterfly.getValueAtExpiration(100) == 4000)
+    // profitable upper
+    assert(butterfly.getValueAtExpiration(101) == 3000)
+    // break even upper
+    assert(butterfly.getValueAtExpiration(104) == 0)
+    // between middle and upper
+    assert(butterfly.getValueAtExpiration(104.5) == -500)
+    // at upper
+    assert(butterfly.getValueAtExpiration(105) == -1000)
+    // above upper
+    assert(butterfly.getValueAtExpiration(110) == -1000)
+  }
+  
+  @Test def testShortCallButterfly() {
+    val butterfly = OptionPositionFactory.shortCallButterfly("spy", 95, 100, 105, Instant.now, 4, 2, 1, 10)
+    assert(butterfly.maxGain == 1000, "max gain was: " + butterfly.maxGain)
+    assert(butterfly.maxLoss == -4000)
+    
+    // below lower strike
+    assert(butterfly.getValueAtExpiration(90) == 1000)
+    // at lower strike
+    assert(butterfly.getValueAtExpiration(95) == 1000)
+    // between lower and middle
+    assert(butterfly.getValueAtExpiration(95.5) == 500)
+    // break even lower
+    assert(butterfly.getValueAtExpiration(96) == 0)
+    // profitable lower
+    assert(butterfly.getValueAtExpiration(99) == -3000)
+    // at middle
+    assert(butterfly.getValueAtExpiration(100) == -4000)
+    // profitable upper
+    assert(butterfly.getValueAtExpiration(101) == -3000)
+    // break even upper
+    assert(butterfly.getValueAtExpiration(104) == 0)
+    // between middle and upper
+    assert(butterfly.getValueAtExpiration(104.5) == 500)
+    // at upper
+    assert(butterfly.getValueAtExpiration(105) == 1000)
+    // above upper
+    assert(butterfly.getValueAtExpiration(110) == 1000)
+  }
+  
+  @Test def testLongPutButterfly() {
+    val butterfly = OptionPositionFactory.longPutButterfly("spy", 95, 100, 105, Instant.now, 1, 2, 4, 10)
+    assert(butterfly.maxGain == 4000, "max gain was: " + butterfly.maxGain)
+    assert(butterfly.maxLoss == -1000)
+    
+    // below lower strike
+    assert(butterfly.getValueAtExpiration(90) == -1000)
+    // at lower strike
+    assert(butterfly.getValueAtExpiration(95) == -1000)
+    // between lower and middle
+    assert(butterfly.getValueAtExpiration(95.5) == -500)
+    // break even lower
+    assert(butterfly.getValueAtExpiration(96) == 0)
+    // profitable lower
+    assert(butterfly.getValueAtExpiration(99) == 3000)
+    // at middle
+    assert(butterfly.getValueAtExpiration(100) == 4000)
+    // profitable upper
+    assert(butterfly.getValueAtExpiration(101) == 3000)
+    // break even upper
+    assert(butterfly.getValueAtExpiration(104) == 0)
+    // between middle and upper
+    assert(butterfly.getValueAtExpiration(104.5) == -500)
+    // at upper
+    assert(butterfly.getValueAtExpiration(105) == -1000)
+    // above upper
+    assert(butterfly.getValueAtExpiration(110) == -1000)
+  }
+  
+  @Test def testShortPutButterfly() {
+    val butterfly = OptionPositionFactory.shortPutButterfly("spy", 95, 100, 105, Instant.now, 1, 2, 4, 10)
+    assert(butterfly.maxGain == 1000, "max gain was: " + butterfly.maxGain)
+    assert(butterfly.maxLoss == -4000)
+    
+    // below lower strike
+    assert(butterfly.getValueAtExpiration(90) == 1000)
+    // at lower strike
+    assert(butterfly.getValueAtExpiration(95) == 1000)
+    // between lower and middle
+    assert(butterfly.getValueAtExpiration(95.5) == 500)
+    // break even lower
+    assert(butterfly.getValueAtExpiration(96) == 0)
+    // profitable lower
+    assert(butterfly.getValueAtExpiration(99) == -3000)
+    // at middle
+    assert(butterfly.getValueAtExpiration(100) == -4000)
+    // profitable upper
+    assert(butterfly.getValueAtExpiration(101) == -3000)
+    // break even upper
+    assert(butterfly.getValueAtExpiration(104) == 0)
+    // between middle and upper
+    assert(butterfly.getValueAtExpiration(104.5) == 500)
+    // at upper
+    assert(butterfly.getValueAtExpiration(105) == 1000)
+    // above upper
+    assert(butterfly.getValueAtExpiration(110) == 1000)
+  }
+  
+  @Test def testLongIronButterfly() {
+    val butterfly = OptionPositionFactory.longIronButterfly("spy", 95, 100, 105, Instant.now, 1, 2, 1, 10)
+    assert(butterfly.maxGain == 2000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -3000)
     
     // below lower strike
@@ -246,7 +362,7 @@ class OptionPositionTest extends Assertions {
     // at lower strike
     assert(butterfly.getValueAtExpiration(95) == -3000)
     // between lower and middle
-    assert(butterfly.getValueAtExpiration(97) == -1000)
+    assert(butterfly.getValueAtExpiration(96) == -2000)
     // break even lower
     assert(butterfly.getValueAtExpiration(98) == 0)
     // profitable lower
@@ -258,55 +374,238 @@ class OptionPositionTest extends Assertions {
     // break even upper
     assert(butterfly.getValueAtExpiration(102) == 0)
     // between middle and upper
-    assert(butterfly.getValueAtExpiration(103) == -1000)
+    assert(butterfly.getValueAtExpiration(104) == -2000)
     // at upper
     assert(butterfly.getValueAtExpiration(105) == -3000)
     // above upper
     assert(butterfly.getValueAtExpiration(110) == -3000)
   }
   
-  @Test def testShortCallButterfly() {
-    
-  }
-  
-  @Test def testLongPutButterfly() {
-    
-  }
-  
-  @Test def testShortPutButterfly() {
-    
-  }
-  
-  @Test def testLongIronButterfly() {
-    
-  }
-  
   @Test def testShortIronButterfly() {
+    val butterfly = OptionPositionFactory.shortIronButterfly("spy", 95, 100, 105, Instant.now, 1, 2, 1, 10)
+    assert(butterfly.maxGain == 3000, "max gain was: " + butterfly.maxGain)
+    assert(butterfly.maxLoss == -2000)
     
+    // below lower strike
+    assert(butterfly.getValueAtExpiration(90) == 3000)
+    // at lower strike
+    assert(butterfly.getValueAtExpiration(95) == 3000)
+    // between lower and middle
+    assert(butterfly.getValueAtExpiration(96) == 2000)
+    // break even lower
+    assert(butterfly.getValueAtExpiration(98) == 0)
+    // profitable lower
+    assert(butterfly.getValueAtExpiration(99) == -1000)
+    // at middle
+    assert(butterfly.getValueAtExpiration(100) == -2000)
+    // profitable upper
+    assert(butterfly.getValueAtExpiration(101) == -1000)
+    // break even upper
+    assert(butterfly.getValueAtExpiration(102) == 0)
+    // between middle and upper
+    assert(butterfly.getValueAtExpiration(104) == 2000)
+    // at upper
+    assert(butterfly.getValueAtExpiration(105) == 3000)
+    // above upper
+    assert(butterfly.getValueAtExpiration(110) == 3000)
   }
   
   @Test def testLongCallCondor() {
+    val condor = OptionPositionFactory.longCallCondor("spy", 90, 95, 100, 105, Instant.now, 7, 4, 3, 1, 10)
+    assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -1000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == -1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == -1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == -500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == 1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == 4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == 4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == 4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == 1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == -500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == -1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == -1000)
   }
   
   @Test def testShortCallCondor() {
+    val condor = OptionPositionFactory.shortCallCondor("spy", 90, 95, 100, 105, Instant.now, 7, 4, 3, 1, 10)
+    assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -4000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == 1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == 1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == 500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == -1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == -4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == -4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == -4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == -1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == 500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == 1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == 1000)
   }
   
   @Test def testLongPutCondor() {
+    val condor = OptionPositionFactory.longPutCondor("spy", 90, 95, 100, 105, Instant.now, 1, 3, 4, 7, 10)
+    assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -1000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == -1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == -1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == -500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == 1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == 4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == 4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == 4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == 1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == -500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == -1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == -1000)
   }
   
   @Test def testShortPutCondor() {
+    val condor = OptionPositionFactory.shortPutCondor("spy", 90, 95, 100, 105, Instant.now, 1, 3, 4, 7, 10)
+    assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -4000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == 1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == 1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == 500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == -1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == -4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == -4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == -4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == -1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == 500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == 1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == 1000)
   }
   
   @Test def testLongIronCondor() {
+    val condor = OptionPositionFactory.longIronCondor("spy", 90, 95, 100, 105, Instant.now, 1, 3, 3, 1, 10)
+    assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -1000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == -1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == -1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == -500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == 1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == 4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == 4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == 4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == 1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == -500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == -1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == -1000)
   }
   
   @Test def testShortIronCondor() {
+    val condor = OptionPositionFactory.shortIronCondor("spy", 90, 95, 100, 105, Instant.now, 1, 3, 3, 1, 10)
+    assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
+    assert(condor.maxLoss == -4000)
     
+    // below lower strike
+    assert(condor.getValueAtExpiration(85) == 1000)
+    // at lower strike
+    assert(condor.getValueAtExpiration(90) == 1000)
+    // between lower strikes
+    assert(condor.getValueAtExpiration(90.5) == 500)
+    // break even lower
+    assert(condor.getValueAtExpiration(91) == 0)
+    // between lower strikes profitable
+    assert(condor.getValueAtExpiration(92) == -1000)
+    // at lower middle strike
+    assert(condor.getValueAtExpiration(95) == -4000)
+    // between middle strikes
+    assert(condor.getValueAtExpiration(97) == -4000)
+    // at upper middle strike
+    assert(condor.getValueAtExpiration(100) == -4000)
+    // between upper strikes profitable
+    assert(condor.getValueAtExpiration(103) == -1000)
+    // break even upper
+    assert(condor.getValueAtExpiration(104) == 0)
+    // between upper strikes
+    assert(condor.getValueAtExpiration(104.5) == 500)
+    // at upper strike
+    assert(condor.getValueAtExpiration(105) == 1000)
+    // above upper strike
+    assert(condor.getValueAtExpiration(110) == 1000)
   }
   
   @Test def testLongCallRatioBackspread() {
