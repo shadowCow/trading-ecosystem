@@ -12,16 +12,16 @@ class OptionLeg(val option: Option, val entryPrice: Double, val quantity: Int, v
   /**
    * Get the value of this option leg given the current price of the option
    */
-  def getValue(currentPrice: Double): Double = {
+  def getNetGain(currentPrice: Double): Double = {
     ((currentPrice - entryPrice) * direction.positionMultiplier) * quantity * sharesPerOption
   }
   
   /**
    * Get the value of this option leg at expiration given the price of the underlying
    */
-  def getValueAtExpiration(underlyingPrice: Double): Double = {
+  def getNetGainAtExpiration(underlyingPrice: Double): Double = {
     val optionPrice = math.max(0, (underlyingPrice - option.strikePrice) * OptionType.getMultiplier(option.optionType))
-    getValue(optionPrice)
+    getNetGain(optionPrice)
   }
   
 }

@@ -5,7 +5,7 @@ package com.cowsunday.options
  */
 class StockPosition(val symbol: String, val entryPrice: Double, val quantity: Int, val positionDirection: PositionDirection.Direction) {
 
-  def getValue(currentPrice: Double):Double = {
+  def getNetGain(currentPrice: Double): Double = {
     ((currentPrice - entryPrice) * positionDirection.positionMultiplier) * quantity
   }
   

@@ -25,7 +25,7 @@ object OptionPositionMetrics {
     val integrator = new IterativeLegendreGaussIntegrator(2, 5, 100)
     val expectedValueFunction = new UnivariateFunction() {
         override def value(assetPrice: Double): Double = {
-          optionPosition.getValueAtExpiration(assetPrice) * distribution.probability(assetPrice)
+          optionPosition.getNetGainAtExpiration(assetPrice) * distribution.probability(assetPrice)
         }
       }
       
