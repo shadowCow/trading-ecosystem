@@ -6,37 +6,40 @@ import org.apache.commons.math3.analysis.integration._
 
 object OptionPositionMetrics {
 
-  def computeMetrics(optionPosition: OptionPosition, distribution: RealDistribution): PositionMetrics = {
+  def computeMetrics(optionPosition: OptionPosition, distribution: DiscreteDistribution): PositionMetrics = {
     val winPct = optionPosition.positiveValueIntervals.map { interval => 
       distribution.cumulativeProbability(interval.end) - distribution.cumulativeProbability(interval.start)
       }.sum
     
-    val expectedGain = computeCumulativeExpectation(optionPosition.positiveValueIntervals, optionPosition, distribution)
-    val expectedLoss = computeCumulativeExpectation(optionPosition.negativeValueIntervals, optionPosition, distribution)
+    val positiveValuePoints = getPositiveValuePoints(optionPosition.positiveValueIntervals, distribution)
+    val negativeValuePoints = getNegativeValuePoints(optionPosition.negativeValueIntervals, distribution)
     
-    val rr = computeRewardRiskRatio(expectedGain, expectedLoss)
+    val expectedGain = computeCumulativeExpectation(positiveValuePoints, optionPosition, winPct)
+    val expectedLoss = computeCumulativeExpectation(negativeValuePoints, optionPosition, 1 - winPct)
+
+    // multiply expectedLoss by -1 so that we are getting a positive ratio
+    val rr = computeRewardRiskRatio(expectedGain, expectedLoss * (-1))
     val expectedValue = computeExpectedValue(rr, winPct)
     
     new PositionMetrics(expectedValue, winPct, rr, optionPosition.maxGain, optionPosition.maxLoss)
   }
   
-  def computeCumulativeExpectation(valueIntervals: List[LinearValueInterval], optionPosition: OptionPosition, distribution: RealDistribution): Double = {
-      
-    val integrator = new IterativeLegendreGaussIntegrator(2, 5, 100)
-    val expectedValueFunction = new UnivariateFunction() {
-        override def value(assetPrice: Double): Double = {
-          optionPosition.getNetGainAtExpiration(assetPrice) * distribution.probability(assetPrice)
-        }
-      }
-      
-    val expectedValue = valueIntervals.map { interval => 
-        integrator.integrate(100, expectedValueFunction, interval.start, interval.end)
-      }.sum
-    
-    expectedValue
+  private def getPositiveValuePoints(valueIntervals: List[LinearValueInterval], distribution: DiscreteDistribution): List[DiscreteDistributionPoint] = {
+    distribution.points.filter { point => valueIntervals.exists { interval => interval.contains(point.value) } }
   }
   
-  def computeRewardRiskRatio(expectedGain: Double, expectedLoss: Double): Double = {
+  private def getNegativeValuePoints(valueIntervals: List[LinearValueInterval], distribution: DiscreteDistribution): List[DiscreteDistributionPoint] = {
+    distribution.points.filter { point => valueIntervals.exists { interval => interval.contains(point.value) } }
+  }
+  
+  /**
+   * @param adjustmentFactor we need to normalize the distribution here so that the sum of the probabilities is 1.
+   */
+  private def computeCumulativeExpectation(points: List[DiscreteDistributionPoint], optionPosition: OptionPosition, adjustmentFactor: Double): Double = {
+    points.map { point => optionPosition.getNetGainAtExpiration(point.value) * point.probability }.sum / adjustmentFactor
+  }
+  
+  private def computeRewardRiskRatio(expectedGain: Double, expectedLoss: Double): Double = {
     if (expectedGain < 0 || expectedLoss < 0) {
       throw new IllegalArgumentException("expectedGain and expectedLoss must be >= 0")
     } else if (expectedLoss == 0.0 && expectedGain == 0.0) {
@@ -48,7 +51,7 @@ object OptionPositionMetrics {
     }
   }
   
-  def computeExpectedValue(rewardRiskRatio: Double, winPct: Double): Double = {
+  private def computeExpectedValue(rewardRiskRatio: Double, winPct: Double): Double = {
     rewardRiskRatio * winPct - (1 - winPct)
   }
 }

@@ -1,6 +1,6 @@
 package com.cowsunday.options
 
-class DiscreteDistribution(val points: List[DiscreteDistributionPoint]) extends Distribution {
+class DiscreteDistribution(val points: List[DiscreteDistributionPoint]) {
   
   if (points.map { point => point.value }.distinct.length != points.length) {
     throw new IllegalArgumentException("values for this distribution must be distinct")

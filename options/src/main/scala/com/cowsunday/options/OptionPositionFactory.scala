@@ -54,20 +54,20 @@ object OptionPositionFactory {
   
   def bullPutSpread(symbol: String, strikePriceLower: Double, strikePriceUpper: Double, expirationDate: Instant, entryPriceLower: Double, entryPriceUpper: Double, quantity: Int): OptionPosition = {
     val optionLower = new Option(symbol, OptionType.PUT, strikePriceLower, expirationDate)
-    val legLower = new OptionLeg(optionLower, entryPriceLower, quantity, PositionDirection.SHORT)
+    val legLower = new OptionLeg(optionLower, entryPriceLower, quantity, PositionDirection.LONG)
     
     val optionUpper = new Option(symbol, OptionType.PUT, strikePriceUpper, expirationDate)
-    val legUpper = new OptionLeg(optionUpper, entryPriceUpper, quantity, PositionDirection.LONG)
+    val legUpper = new OptionLeg(optionUpper, entryPriceUpper, quantity, PositionDirection.SHORT)
     
     new OptionPosition(List(legLower, legUpper))
   }
   
   def bearPutSpread(symbol: String, strikePriceLower: Double, strikePriceUpper: Double, expirationDate: Instant, entryPriceLower: Double, entryPriceUpper: Double, quantity: Int): OptionPosition = {
     val optionLower = new Option(symbol, OptionType.PUT, strikePriceLower, expirationDate)
-    val legLower = new OptionLeg(optionLower, entryPriceLower, quantity, PositionDirection.LONG)
+    val legLower = new OptionLeg(optionLower, entryPriceLower, quantity, PositionDirection.SHORT)
     
     val optionUpper = new Option(symbol, OptionType.PUT, strikePriceUpper, expirationDate)
-    val legUpper = new OptionLeg(optionUpper, entryPriceUpper, quantity, PositionDirection.SHORT)
+    val legUpper = new OptionLeg(optionUpper, entryPriceUpper, quantity, PositionDirection.LONG)
     
     new OptionPosition(List(legLower, legUpper))
   }

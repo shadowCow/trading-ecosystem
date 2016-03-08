@@ -13,6 +13,8 @@ class OptionPositionTest extends Assertions {
     assert(longCall.maxGain == Double.PositiveInfinity)
     assert(longCall.maxLoss == -2000)
     
+    // 0
+    assert(longCall.getNetGainAtExpiration(0) == -2000)
     // itm
     assert(longCall.getNetGainAtExpiration(105) == 3000)
     // atm
@@ -21,6 +23,8 @@ class OptionPositionTest extends Assertions {
     assert(longCall.getNetGainAtExpiration(95) == -2000)
     // breakeven
     assert(longCall.getNetGainAtExpiration(102) == 0)
+    // infinity
+    assert(longCall.getNetGainAtExpiration(Double.PositiveInfinity) == Double.PositiveInfinity)
   }
   
   @Test def testShortCall() {
@@ -28,6 +32,8 @@ class OptionPositionTest extends Assertions {
     assert(shortCall.maxGain == 2000)
     assert(shortCall.maxLoss == Double.NegativeInfinity)
     
+    // 0
+    assert(shortCall.getNetGainAtExpiration(0) == 2000)
     // itm
     assert(shortCall.getNetGainAtExpiration(105) == -3000)
     // atm 
@@ -36,6 +42,8 @@ class OptionPositionTest extends Assertions {
     assert(shortCall.getNetGainAtExpiration(95) == 2000)
     // breakeven
     assert(shortCall.getNetGainAtExpiration(102) == 0)
+    // infinity
+    assert(shortCall.getNetGainAtExpiration(Double.PositiveInfinity) == Double.NegativeInfinity)
   }
   
   @Test def testLongPut() {
@@ -43,6 +51,8 @@ class OptionPositionTest extends Assertions {
     assert(longPut.maxGain == 98000)
     assert(longPut.maxLoss == -2000)
     
+    // 0
+    assert(longPut.getNetGainAtExpiration(0) == 98000)
     // itm
     assert(longPut.getNetGainAtExpiration(95) == 3000)
     // atm
@@ -51,6 +61,8 @@ class OptionPositionTest extends Assertions {
     assert(longPut.getNetGainAtExpiration(105) == -2000)
     // breakeven
     assert(longPut.getNetGainAtExpiration(98) == 0)
+    // infinity 
+    assert(longPut.getNetGainAtExpiration(Double.PositiveInfinity) == -2000)
   }
   
   @Test def testShortPut() {
@@ -58,6 +70,8 @@ class OptionPositionTest extends Assertions {
     assert(shortPut.maxGain == 2000)
     assert(shortPut.maxLoss == -98000)
     
+    // 0
+    assert(shortPut.getNetGainAtExpiration(0) == -98000)
     // itm
     assert(shortPut.getNetGainAtExpiration(95) == -3000)
     // atm
@@ -66,6 +80,8 @@ class OptionPositionTest extends Assertions {
     assert(shortPut.getNetGainAtExpiration(105) == 2000)
     // breakeven
     assert(shortPut.getNetGainAtExpiration(98) == 0)
+    // infinity
+    assert(shortPut.getNetGainAtExpiration(Double.PositiveInfinity) == 2000)
   }
   
   @Test def testBullCallSpread() {
@@ -73,6 +89,8 @@ class OptionPositionTest extends Assertions {
     assert(bullCallSpread.maxGain == 4000, "maxGain was: " + bullCallSpread.maxGain)
     assert(bullCallSpread.maxLoss == -1000)
     
+    // 0
+    assert(bullCallSpread.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(bullCallSpread.getNetGainAtExpiration(98) == -1000)
     // at lower strike
@@ -85,6 +103,8 @@ class OptionPositionTest extends Assertions {
     assert(bullCallSpread.getNetGainAtExpiration(108) == 4000)
     // break even
     assert(bullCallSpread.getNetGainAtExpiration(101) == 0)
+    // infinity
+    assert(bullCallSpread.getNetGainAtExpiration(Double.PositiveInfinity) == 4000)
   }
   
   @Test def testBearCallSpread() {
@@ -92,6 +112,8 @@ class OptionPositionTest extends Assertions {
     assert(bearCallSpread.maxGain == 1000, "maxGain was: " + bearCallSpread.maxGain)
     assert(bearCallSpread.maxLoss == -4000)
     
+    // 0
+    assert(bearCallSpread.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(bearCallSpread.getNetGainAtExpiration(98) == 1000)
     // at lower strike
@@ -104,44 +126,55 @@ class OptionPositionTest extends Assertions {
     assert(bearCallSpread.getNetGainAtExpiration(108) == -4000)
     // break even
     assert(bearCallSpread.getNetGainAtExpiration(101) == 0)
+    // infinity
+    assert(bearCallSpread.getNetGainAtExpiration(Double.PositiveInfinity) == -4000)
   }
   
   @Test def testBullPutSpread() {
     val bullPutSpread = OptionPositionFactory.bullPutSpread("spy", 100, 105, Instant.now, 1, 2, 10)
-    assert(bullPutSpread.maxGain == 4000, "maxGain was: " + bullPutSpread.maxGain)
-    assert(bullPutSpread.maxLoss == -1000)
+    assert(bullPutSpread.maxGain == 1000, "maxGain was: " + bullPutSpread.maxGain)
+    assert(bullPutSpread.maxLoss == -4000)
     
+    // 0
+    assert(bullPutSpread.getNetGainAtExpiration(0) == -4000)
     // below lower strike
-    assert(bullPutSpread.getNetGainAtExpiration(98) == 4000)
+    assert(bullPutSpread.getNetGainAtExpiration(98) == -4000)
     // at lower strike
-    assert(bullPutSpread.getNetGainAtExpiration(100) == 4000)
+    assert(bullPutSpread.getNetGainAtExpiration(100) == -4000)
     // between strikes
-    assert(bullPutSpread.getNetGainAtExpiration(103) == 1000)
+    assert(bullPutSpread.getNetGainAtExpiration(103) == -1000)
     // at upper strike
-    assert(bullPutSpread.getNetGainAtExpiration(105) == -1000)
+    assert(bullPutSpread.getNetGainAtExpiration(105) == 1000)
     // above upper strike
-    assert(bullPutSpread.getNetGainAtExpiration(108) == -1000)
+    assert(bullPutSpread.getNetGainAtExpiration(108) == 1000)
     // break even
     assert(bullPutSpread.getNetGainAtExpiration(104) == 0)
+    // infinity
+    assert(bullPutSpread.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
+    
   }
   
   @Test def testBearPutSpread() {
     val bearPutSpread = OptionPositionFactory.bearPutSpread("spy", 100, 105, Instant.now, 1, 2, 10)
-    assert(bearPutSpread.maxGain == 1000, "maxGain was: " + bearPutSpread.maxGain)
-    assert(bearPutSpread.maxLoss == -4000)
+    assert(bearPutSpread.maxGain == 4000, "maxGain was: " + bearPutSpread.maxGain)
+    assert(bearPutSpread.maxLoss == -1000)
     
+    // 0
+    assert(bearPutSpread.getNetGainAtExpiration(0) == 4000)
     // below lower strike
-    assert(bearPutSpread.getNetGainAtExpiration(98) == -4000)
+    assert(bearPutSpread.getNetGainAtExpiration(98) == 4000)
     // at lower strike
-    assert(bearPutSpread.getNetGainAtExpiration(100) == -4000)
+    assert(bearPutSpread.getNetGainAtExpiration(100) == 4000)
     // between strikes
-    assert(bearPutSpread.getNetGainAtExpiration(103) == -1000)
+    assert(bearPutSpread.getNetGainAtExpiration(103) == 1000)
     // at upper strike
-    assert(bearPutSpread.getNetGainAtExpiration(105) == 1000)
+    assert(bearPutSpread.getNetGainAtExpiration(105) == -1000)
     // above upper strike
-    assert(bearPutSpread.getNetGainAtExpiration(108) == 1000)
+    assert(bearPutSpread.getNetGainAtExpiration(108) == -1000)
     // break even
     assert(bearPutSpread.getNetGainAtExpiration(104) == 0)
+    // infinity
+    assert(bearPutSpread.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testLongStraddle() {
@@ -149,6 +182,8 @@ class OptionPositionTest extends Assertions {
     assert(straddle.maxGain == Double.PositiveInfinity)
     assert(straddle.maxLoss == -4000)
     
+    // 0
+    assert(straddle.getNetGainAtExpiration(0) == 96000)
     // profitable below
     assert(straddle.getNetGainAtExpiration(90) == 6000)
     // break even below
@@ -163,6 +198,8 @@ class OptionPositionTest extends Assertions {
     assert(straddle.getNetGainAtExpiration(104) == 0)
     // profitable above
     assert(straddle.getNetGainAtExpiration(110) == 6000)
+    // infinity
+    assert(straddle.getNetGainAtExpiration(Double.PositiveInfinity) == Double.PositiveInfinity)
   }
   
   @Test def testShortStraddle() {
@@ -170,6 +207,8 @@ class OptionPositionTest extends Assertions {
     assert(straddle.maxGain == 4000)
     assert(straddle.maxLoss == Double.NegativeInfinity, "actual max loss: " + straddle.maxLoss)
     
+    // 0
+    assert(straddle.getNetGainAtExpiration(0) == -96000)
     // profitable below
     assert(straddle.getNetGainAtExpiration(90) == -6000)
     // break even below
@@ -184,6 +223,8 @@ class OptionPositionTest extends Assertions {
     assert(straddle.getNetGainAtExpiration(104) == 0)
     // profitable above
     assert(straddle.getNetGainAtExpiration(110) == -6000)
+    // infinity
+    assert(straddle.getNetGainAtExpiration(Double.PositiveInfinity) == Double.NegativeInfinity)
   }
   
   @Test def testLongStrangle() {
@@ -191,6 +232,8 @@ class OptionPositionTest extends Assertions {
     assert(strangle.maxGain == Double.PositiveInfinity)
     assert(strangle.maxLoss == -4000)
     
+    // 0
+    assert(strangle.getNetGainAtExpiration(0) == 91000)
     // profitable below
     assert(strangle.getNetGainAtExpiration(90) == 1000)
     // break even below
@@ -209,6 +252,8 @@ class OptionPositionTest extends Assertions {
     assert(strangle.getNetGainAtExpiration(109) == 0)
     // profitable above
     assert(strangle.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(strangle.getNetGainAtExpiration(Double.PositiveInfinity) == Double.PositiveInfinity)
   }
   
   @Test def testShortStrangle() {
@@ -216,6 +261,8 @@ class OptionPositionTest extends Assertions {
     assert(strangle.maxGain == 4000)
     assert(strangle.maxLoss == Double.NegativeInfinity)
     
+    // 0
+    assert(strangle.getNetGainAtExpiration(0) == -91000)
     // profitable below
     assert(strangle.getNetGainAtExpiration(90) == -1000)
     // break even below
@@ -234,6 +281,8 @@ class OptionPositionTest extends Assertions {
     assert(strangle.getNetGainAtExpiration(109) == 0)
     // profitable above
     assert(strangle.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(strangle.getNetGainAtExpiration(Double.PositiveInfinity) == Double.NegativeInfinity)
   }
   
   @Test def testLongCallButterfly() {
@@ -241,6 +290,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 4000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -1000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == -1000)
     // at lower strike
@@ -263,6 +314,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == -1000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testShortCallButterfly() {
@@ -270,6 +323,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 1000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -4000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == 1000)
     // at lower strike
@@ -292,6 +347,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == 1000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testLongPutButterfly() {
@@ -299,6 +356,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 4000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -1000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == -1000)
     // at lower strike
@@ -321,6 +380,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == -1000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testShortPutButterfly() {
@@ -328,6 +389,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 1000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -4000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == 1000)
     // at lower strike
@@ -350,6 +413,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == 1000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testLongIronButterfly() {
@@ -357,6 +422,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 2000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -3000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == -3000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == -3000)
     // at lower strike
@@ -379,6 +446,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == -3000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == -3000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == -3000)
   }
   
   @Test def testShortIronButterfly() {
@@ -386,6 +455,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.maxGain == 3000, "max gain was: " + butterfly.maxGain)
     assert(butterfly.maxLoss == -2000)
     
+    // 0
+    assert(butterfly.getNetGainAtExpiration(0) == 3000)
     // below lower strike
     assert(butterfly.getNetGainAtExpiration(90) == 3000)
     // at lower strike
@@ -408,6 +479,8 @@ class OptionPositionTest extends Assertions {
     assert(butterfly.getNetGainAtExpiration(105) == 3000)
     // above upper
     assert(butterfly.getNetGainAtExpiration(110) == 3000)
+    // infinity
+    assert(butterfly.getNetGainAtExpiration(Double.PositiveInfinity) == 3000)
   }
   
   @Test def testLongCallCondor() {
@@ -415,6 +488,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
     assert(condor.maxLoss == -1000)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == -1000)
     // at lower strike
@@ -441,6 +516,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.getNetGainAtExpiration(105) == -1000)
     // above upper strike
     assert(condor.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(condor.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testShortCallCondor() {
@@ -448,6 +525,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
     assert(condor.maxLoss == -4000)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == 1000)
     // at lower strike
@@ -474,6 +553,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.getNetGainAtExpiration(105) == 1000)
     // above upper strike
     assert(condor.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(condor.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testLongPutCondor() {
@@ -481,6 +562,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
     assert(condor.maxLoss == -1000)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == -1000)
     // at lower strike
@@ -507,6 +590,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.getNetGainAtExpiration(105) == -1000)
     // above upper strike
     assert(condor.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(condor.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testShortPutCondor() {
@@ -514,6 +599,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
     assert(condor.maxLoss == -4000)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == 1000)
     // at lower strike
@@ -540,13 +627,17 @@ class OptionPositionTest extends Assertions {
     assert(condor.getNetGainAtExpiration(105) == 1000)
     // above upper strike
     assert(condor.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(condor.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testLongIronCondor() {
     val condor = OptionPositionFactory.longIronCondor("spy", 90, 95, 100, 105, Instant.now, 1, 3, 3, 1, 10)
     assert(condor.maxGain == 4000, "max gain was: " + condor.maxGain)
-    //assert(condor.maxLoss == -1000, "max loss was: " + condor.maxLoss)
+    assert(condor.maxLoss == -1000, "max loss was: " + condor.maxLoss)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == -1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == -1000)
     // at lower strike
@@ -582,6 +673,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.maxGain == 1000, "max gain was: " + condor.maxGain)
     assert(condor.maxLoss == -4000)
     
+    // 0
+    assert(condor.getNetGainAtExpiration(0) == 1000)
     // below lower strike
     assert(condor.getNetGainAtExpiration(85) == 1000)
     // at lower strike
@@ -608,6 +701,8 @@ class OptionPositionTest extends Assertions {
     assert(condor.getNetGainAtExpiration(105) == 1000)
     // above upper strike
     assert(condor.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(condor.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testLongCallRatioBackspread() {
@@ -615,6 +710,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.maxGain == Double.PositiveInfinity)
     assert(backspread.maxLoss == -4000)
     
+    // 0
+    assert(backspread.getNetGainAtExpiration(0) == 1000)
     // below lower
     assert(backspread.getNetGainAtExpiration(95) == 1000)
     // at lower
@@ -631,6 +728,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.getNetGainAtExpiration(109) == 0)
     // above upper break even profitable
     assert(backspread.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(backspread.getNetGainAtExpiration(Double.PositiveInfinity) == Double.PositiveInfinity)
   }
   
   @Test def testShortCallRatioBackspread() {
@@ -638,6 +737,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.maxGain == 4000)
     assert(backspread.maxLoss == Double.NegativeInfinity)
     
+    // 0
+    assert(backspread.getNetGainAtExpiration(0) == -1000)
     // below lower
     assert(backspread.getNetGainAtExpiration(95) == -1000)
     // at lower
@@ -654,6 +755,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.getNetGainAtExpiration(109) == 0)
     // above upper break even profitable
     assert(backspread.getNetGainAtExpiration(110) == -1000)
+    // infinity
+    assert(backspread.getNetGainAtExpiration(Double.PositiveInfinity) == Double.NegativeInfinity)
   }
   
   @Test def testLongPutRatioBackspread() {
@@ -661,6 +764,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.maxGain == (99*2 - 102) * 1000, "max gain was: " + backspread.maxGain)
     assert(backspread.maxLoss == -4000)
     
+    // 0
+    assert(backspread.getNetGainAtExpiration(0) == (99*2 - 102) * 1000)
     // below lower profitable
     assert(backspread.getNetGainAtExpiration(95) == 1000)
     // break even lower
@@ -677,6 +782,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.getNetGainAtExpiration(105) == 1000)
     // above upper
     assert(backspread.getNetGainAtExpiration(110) == 1000)
+    // infinity
+    assert(backspread.getNetGainAtExpiration(Double.PositiveInfinity) == 1000)
   }
   
   @Test def testShortPutRatioBackspread() {
@@ -684,6 +791,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.maxGain == 4000, "max gain was: " + backspread.maxGain)
     assert(backspread.maxLoss == -(99*2 - 102) * 1000)
     
+    // at 0
+    assert(backspread.getNetGainAtExpiration(0) == -(99*2 - 102) * 1000)
     // below lower profitable
     assert(backspread.getNetGainAtExpiration(95) == -1000)
     // break even lower
@@ -700,6 +809,8 @@ class OptionPositionTest extends Assertions {
     assert(backspread.getNetGainAtExpiration(105) == -1000)
     // above upper
     assert(backspread.getNetGainAtExpiration(110) == -1000)
+    // at infinity
+    assert(backspread.getNetGainAtExpiration(Double.PositiveInfinity) == -1000)
   }
   
   @Test def testCoveredCall() {
@@ -720,20 +831,79 @@ class OptionPositionTest extends Assertions {
     // above strike
     assert(covered.getNetGainAtExpiration(105) == 3000)
     // at infinity
-    // stock position is not being offset against the options - fix that
     assert(covered.getNetGainAtExpiration(Double.PositiveInfinity) == 3000)
   }
   
   @Test def testCoveredPut() {
+    val position = OptionPositionFactory.coveredPut("spy", 100, Instant.now, 3, 100, 10)
+    assert(position.maxGain == 3000)
+    assert(position.maxLoss == Double.NegativeInfinity)
+    
+    // 0
+    assert(position.getNetGainAtExpiration(0) == 3000)
+    // below strike
+    assert(position.getNetGainAtExpiration(98) == 3000)
+    // at strike
+    assert(position.getNetGainAtExpiration(100) == 3000)
+    // above strike profitable
+    assert(position.getNetGainAtExpiration(101) == 2000)
+    // break even
+    assert(position.getNetGainAtExpiration(103) == 0)
+    // above break even
+    assert(position.getNetGainAtExpiration(105) == -2000)
+    // at infinity
+    assert(position.getNetGainAtExpiration(Double.PositiveInfinity) == Double.NegativeInfinity)
     
   }
   
   @Test def testLongFence() {
+    val position = OptionPositionFactory.longFence("spy", 102, 98, Instant.now, 2, 2, 100, 10)
+    assert(position.maxGain == 2000)
+    assert(position.maxLoss == -2000)
     
+    // 0
+    assert(position.getNetGainAtExpiration(0) == -2000)
+    // below lower strike
+    assert(position.getNetGainAtExpiration(96) == -2000)
+    // at lower strike
+    assert(position.getNetGainAtExpiration(98) == -2000)
+    // above lower strike
+    assert(position.getNetGainAtExpiration(99) == -1000)
+    // break even
+    assert(position.getNetGainAtExpiration(100) == 0)
+    // above break even
+    assert(position.getNetGainAtExpiration(101) == 1000)
+    // at upper strike
+    assert(position.getNetGainAtExpiration(102) == 2000)
+    // above upper strike
+    assert(position.getNetGainAtExpiration(104) == 2000)
+    // infinity
+    assert(position.getNetGainAtExpiration(Double.PositiveInfinity) == 2000)
   }
   
   @Test def testShortFence() {
+    val position = OptionPositionFactory.shortFence("spy", 102, 98, Instant.now, 2, 2, 100, 10)
+    assert(position.maxGain == 2000)
+    assert(position.maxLoss == -2000)
     
+    // 0
+    assert(position.getNetGainAtExpiration(0) == 2000)
+    // below lower strike
+    assert(position.getNetGainAtExpiration(96) == 2000)
+    // at lower strike
+    assert(position.getNetGainAtExpiration(98) == 2000)
+    // above lower strike
+    assert(position.getNetGainAtExpiration(99) == 1000)
+    // break even
+    assert(position.getNetGainAtExpiration(100) == 0)
+    // above break even
+    assert(position.getNetGainAtExpiration(101) == -1000)
+    // at upper strike
+    assert(position.getNetGainAtExpiration(102) == -2000)
+    // above upper strike
+    assert(position.getNetGainAtExpiration(104) == -2000)
+    // infinity
+    assert(position.getNetGainAtExpiration(Double.PositiveInfinity) == -2000)
   }
   
   

@@ -27,6 +27,10 @@ class LinearValueInterval(val start: Double, val end: Double, val valueAtStart: 
     math.min(valueAtStart, valueAtEnd)
   }
   
+  def contains(value: Double): Boolean = {
+    (value >= start && value <= end)
+  }
+  
   override def toString(): String = {
     "{\"start\":\"" + start + "\",\"end\":\"" + end + "\",\"valueAtStart\":\"" + valueAtStart + "\",\"valueAtEnd\":\"" + valueAtEnd + "\"}"
   }
