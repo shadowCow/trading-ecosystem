@@ -102,4 +102,15 @@ class OptionPositionMetricsTest extends ExtendedAssertions {
     assertEquals(9, metrics.rr, 0.0001)
   }
   
+  @Test def testCoveredCall() {
+    val position = OptionPositionFactory.coveredCall("spy", 100, Instant.now, 2, 100, 10)
+    
+    val distribution = this.createDistribution()
+    
+    val metrics = OptionPositionMetrics.computeMetrics(position, distribution)
+    
+    assertEquals(-0.1818, metrics.expectedValue, 0.0001)
+    assertEquals(0.6, metrics.winPct, 0.0001)
+    assertEquals(0.3636, metrics.rr, 0.0001)
+  }
 }

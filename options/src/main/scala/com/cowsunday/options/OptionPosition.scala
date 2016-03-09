@@ -18,6 +18,10 @@ class OptionPosition(val optionLegs: List[OptionLeg], val stockPosition: StockPo
     this(optionLegs, null)
   }
   
+  def this(optionLeg: OptionLeg) {
+    this(List(optionLeg))
+  }
+  
   /**
    * We need to deal with off-setting options before we sum up values, otherwise we might be adding positive and negative infinity together, which is undefined.
    */
