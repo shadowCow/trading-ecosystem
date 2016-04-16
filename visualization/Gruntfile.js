@@ -1,12 +1,12 @@
-'use strict';
-
 module.exports = function(grunt) {
 
-    grunt.initConfig({
+    var path = require('path');
 
+    require('load-grunt-config')(grunt, {
+      configPath: path.join(process.cwd(), 'dev-tools/grunt/config'),
+      jitGrunt: {
+        customTasksDir: 'dev-tools/grunt/tasks'
+      }
     });
 
-    grunt.registerTask('build-test', 'Test gradle-grunt integration', function() {
-        grunt.log.writeln('executing grunt custom build.');
-    });
-}
+};
