@@ -1,6 +1,6 @@
 package com.cowsunday.sparkdataanalysis.data
 
-object PriceType extends Enumeration {
+object PriceType extends Enumeration with Serializable {
   type PriceType = Value
   val Open = Value("Open")
   val High = Value("High")

@@ -9,8 +9,8 @@ import runner.SpecificationsFinder
 trait SparkBeforeAfter extends Before {
 
   private val master = "local[2]"
-  private val sparkHome = "/usr/local/spark-1.4.1"
-  private val jars = Array[String]("/Users/dwadeson/trading-ecosystem/spark-data-analysis/target/scala-2.10/spark-data-analysis-assembly-0.1.0.jar")
+  private val sparkHome = "/usr/local/spark-2.0.0-bin-hadoop2.7"
+  private val jars = Array[String]("/Users/dwadeson/trading-ecosystem/spark-data-analysis/target/scala-2.11/spark-data-analysis-assembly-0.2.0.jar")
 
   var sc: SparkContext = _
 
@@ -23,7 +23,7 @@ trait SparkBeforeAfter extends Before {
                   .setSparkHome(sparkHome)
                   .setJars(jars)
 
-    sc = new SparkContext(conf)
+    sc = SparkContext.getOrCreate(conf)
   }
 
 }

@@ -1,4 +1,4 @@
-package com.cowsunday.sparkdataanalysis.tools
+package com.cowsunday.trading.ml.rank
 
 import org.junit.Test
 import org.junit.Before
@@ -9,7 +9,6 @@ import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
-import com.cowsunday.trading.ml.rank.Ranking
 
 @RunWith(classOf[JUnitRunner])
 class RankingSpec extends Specification with SparkBeforeAfter {
