@@ -59,6 +59,8 @@ metrics to use for prediction:
 
 we can combine these metrics as well.
 
+-------------- new stuff -------------------
+
 a few types of operators...
 -rank          (ordered index - includes things like smallest, largest, etc)
 -reduce        (function of several values yielding one value)
@@ -71,27 +73,27 @@ everything needs to be normalized across markets.  so raw values don't do a lot 
 so what translates well across markets....
 -rank		   (biggest / smallest value from last x days)
 -bins          (top x% of values)
--any normalized value really...
+-any normalized value really... (like ratios - day x was 3.2 times the size of day x-1)
 
 ## Single Bar Pipeline
 A single bar pipeline starts with a series of raw price bars.
-We can then perform a series of different transformations, which result in a value for every price bar. 
+We can then perform a series of different transformations, which result in a value for every price bar.
 We are simply mapping each price bar to a new value.
-Some price bars at the beginning of the series may be truncated since they may not have sufficient prior bars to compute values sliding windows. 
+Some price bars at the beginning of the series may be truncated since they may not have sufficient prior bars to compute values sliding windows.
 E.g. for a sliding window of 5, the first 4 values in the series will be dropped since there will not be 5 bars in a row until the 5th bar.
 
-### Data transformations 
+### Data transformations
 #### Single Bar
-We can compute values within a single price bar. 
+We can compute values within a single price bar.
 These take no parameters.
-e.g. 
+e.g.
 - [close - open]
 - [|close - open| / (high - low)]
 
 #### Aggregating a series of bars (Aka sliding window)
 We can compute values from a series of bars.     
 These take a length parameter.  
-  e.g. 
+  e.g.
 - [current open - previous open (2 period window)]
 - [high - high 5 periods ago]
 - [max high - min low of 4 period window]).
