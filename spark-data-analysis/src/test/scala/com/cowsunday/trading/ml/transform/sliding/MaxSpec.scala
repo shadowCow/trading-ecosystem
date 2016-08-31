@@ -11,6 +11,7 @@ import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
 import com.cowsunday.sparkdataanalysis.data.PriceBar
 import com.cowsunday.sparkdataanalysis.data.PriceType
+import com.cowsunday.trading.ml.transform.bar._
 
 @RunWith(classOf[JUnitRunner])
 class MaxSpec extends Specification with SparkBeforeAfter {
@@ -23,19 +24,22 @@ class MaxSpec extends Specification with SparkBeforeAfter {
         new PriceBar(1,1.5,0.5,1, 20150105))
   val rdd = sc.parallelize(priceBars)
 
+  val highRdd = new High().transform(rdd)
+  val openRdd = new Open().transform(rdd)
+
   "Max" should {
     "have correct values" in {
       val length = 3
 
-      val maxHigh = new Max(PriceType.High)
-      val highBars = maxHigh.transform(rdd, length).take(3)
+      val maxHigh = new Max
+      val highBars = maxHigh.transform(highRdd, length).take(3)
 
       highBars(0) mustEqual 6
       highBars(1) mustEqual 6
       highBars(2) mustEqual 6
 
-      val maxOpen = new Max(PriceType.Open)
-      val openBars = maxOpen.transform(rdd, length).take(3)
+      val maxOpen = new Max
+      val openBars = maxOpen.transform(openRdd, length).take(3)
 
       openBars(0) mustEqual 4
       openBars(1) mustEqual 4

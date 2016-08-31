@@ -4,5 +4,5 @@ import org.apache.spark.rdd.RDD
 import com.cowsunday.sparkdataanalysis.data.PriceBar
 
 trait SlidingTransform {
-  def transform(priceData: RDD[PriceBar], length: Int): RDD[Double]
+  def transform(priceData: RDD[Double], length: Int): RDD[Double]
 }

@@ -11,6 +11,7 @@ import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
 import com.cowsunday.sparkdataanalysis.data.PriceBar
 import com.cowsunday.sparkdataanalysis.data.PriceType
+import com.cowsunday.trading.ml.transform.bar._
 
 @RunWith(classOf[JUnitRunner])
 class MinSpec extends Specification with SparkBeforeAfter {
@@ -24,19 +25,22 @@ class MinSpec extends Specification with SparkBeforeAfter {
         new PriceBar(1,1.5,0.5,1, 20150105))
   val rdd = sc.parallelize(priceBars)
 
+  val lowRdd = new Low().transform(rdd)
+  val closeRdd = new Close().transform(rdd)
+
   "Min" should {
     "have correct values" in {
       val length = 3
 
-      val minLow = new Min(PriceType.Low)
-      val lowBars = minLow.transform(rdd, length).take(3)
+      val minLow = new Min
+      val lowBars = minLow.transform(lowRdd, length).take(3)
 
       lowBars(0) mustEqual 0.5
       lowBars(1) mustEqual 1
       lowBars(2) mustEqual 0.5
 
-      val minClose = new Min(PriceType.Close)
-      val closeBars = minClose.transform(rdd, length).take(3)
+      val minClose = new Min
+      val closeBars = minClose.transform(closeRdd, length).take(3)
 
       closeBars(0) mustEqual 2.5
       closeBars(1) mustEqual 1.5

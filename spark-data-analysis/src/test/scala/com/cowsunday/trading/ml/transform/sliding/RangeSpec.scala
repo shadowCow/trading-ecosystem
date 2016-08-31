@@ -11,6 +11,7 @@ import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
 import com.cowsunday.sparkdataanalysis.data.PriceBar
 import com.cowsunday.sparkdataanalysis.data.PriceType
+import com.cowsunday.trading.ml.transform.bar._
 
 @RunWith(classOf[JUnitRunner])
 class RangeSpec extends Specification with SparkBeforeAfter {
@@ -24,58 +25,32 @@ class RangeSpec extends Specification with SparkBeforeAfter {
         new PriceBar(1,1.5,0.5,1, 20150105))
   val rdd = sc.parallelize(priceBars)
 
+  val closeRdd = new Close().transform(rdd)
+
   "Range" should {
     "have correct values for length 3" in {
       val length = 3
 
-      val closeClose = new Range(PriceType.Close, PriceType.Close)
-      val ccdiff = closeClose.transform(rdd, length).take(3)
+      val closeClose = new Range
+      val ccdiff = closeClose.transform(closeRdd, length).take(3)
 
       ccdiff(0) mustEqual 1.5
       ccdiff(1) mustEqual 2.5
       ccdiff(2) mustEqual 3
 
-      val lowHigh = new Range(PriceType.Low, PriceType.High)
-      val lhdiff = lowHigh.transform(rdd, length).take(3)
-
-      lhdiff(0) mustEqual 5.5
-      lhdiff(1) mustEqual 5
-      lhdiff(2) mustEqual 5.5
-
-      val openClose = new Range(PriceType.Open, PriceType.Close)
-      val ocdiff = openClose.transform(rdd, length).take(3)
-
-      ocdiff(0) mustEqual 1
-      ocdiff(1) mustEqual 2
-      ocdiff(2) mustEqual 3
     }
 
     "have correct values for length 2" in {
       val length = 2
 
-      val closeClose = new Range(PriceType.Close, PriceType.Close)
-      val ccdiff = closeClose.transform(rdd, length).take(4)
+      val closeClose = new Range
+      val ccdiff = closeClose.transform(closeRdd, length).take(4)
 
       ccdiff(0) mustEqual 0.5
       ccdiff(1) mustEqual 1.5
       ccdiff(2) mustEqual 2.5
       ccdiff(3) mustEqual 0.5
 
-      val lowHigh = new Range(PriceType.Low, PriceType.High)
-      val lhdiff = lowHigh.transform(rdd, length).take(4)
-
-      lhdiff(0) mustEqual 4.5
-      lhdiff(1) mustEqual 4.5
-      lhdiff(2) mustEqual 5
-      lhdiff(3) mustEqual 2.5
-
-      val openClose = new Range(PriceType.Open, PriceType.Close)
-      val ocdiff = openClose.transform(rdd, length).take(4)
-
-      ocdiff(0) mustEqual 1
-      ocdiff(1) mustEqual 1
-      ocdiff(2) mustEqual 2
-      ocdiff(3) mustEqual 0.5
     }
   }
 }
