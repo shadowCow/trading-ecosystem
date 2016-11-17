@@ -130,6 +130,60 @@ e.g.
 We can also aggregate sets of bars together, and then apply the Single Bar Pipeline on those aggregations.
 For example, we could reduce each 'week' of data (M-F, 5 bars) to a single period by applying some function.
 
+### Rehashing on 10-10-16
+(Sequence of) PriceBars -> Single Data Points -> Binary or Binning or Ranking
+So the data transformation stage itself has stages.
+
+##### Stage 1
+The first stage is to transform the PriceBars themselves, with no sliding windows.  Some possible (though not required) transformations:
+ - Single data point (just the high, or open, e.g.)
+ - Multi data point (the high and the low, e.g.)
+ - Single transformed data point (the high-low range, e.g.)
+ - Multi transformed data point (the high-low range and open-close range, e.g.)
+
+Note that pipeline stages after this one may not be expecting PriceBar input, so may need to consider that?
+Or we may need a generic way to pass either a point, or a tuple of points, or a PriceBar, and have the later pipeline operations understand how to handle that properly?
+
+##### Stage 2 - Sliding Windows
+The second stage is to do sliding windows.  We do some transformation to the data sequence.
+This can be applying some function to our data point to make another data point (like double -> double), or it could be a ranking or binning operation (double -> int ... or double -> class)
+E.g.
+ - rolling average
+ - rolling highest / lowest
+ - rank within the window
+ - bin within the window
+ - count within the window
+
+##### Stage 3 - Multi-series Comparisons
+The third stage is to compare multiple series.  
+We have two cases:
+ 1. We are comparing two series.  The result will be that: series 1 is [ less than, equal to, or greater than ] series 2.  Numerically, the result of the comparison is [ -1, 0, or 1 ].
+ 2. We are comparison more than two series.  The result will either need to be a ranking or a binning.  In the case of a ranking, the result will be that we map each series to its rank amongst the series at that index, for each index.  In the case of binning, we map each series to one of a set of classes, for each index.
+
+Now, since these various transformations may have different input/output types, we need a way to make sure the pipeline generator knows how to put only compatible types together.  I suppose we could have these various things extend appropriate functional types with regard to their input output, and then we can just register those somewhere in the appropriate list.  Then the pipeline generator would have logic to pull from those lists in a way that is valid.
+
+### Rehashing on 11/1/2016
+We're primarily dealing with reductions and comparisons.  Arbitrary transformations seem silly. i.e. mapping one value to another by just passing that single value through some function seems pointless.  
+
+There are some optional processing steps to consider.
+
+#### Pipeline
+ 1. (Optional) Reduce price bar to a single value
+ 2. (Optional) Reduce a window of doubles or price bars to a single value.  Some possibilities...
+   - average
+   - max / min
+   - for price bar windows, multi-bar high-low range/open-close range
+ 3. (Optional) Compare multiple values.  Some possibilities...
+   - compare a value for the last bar to a value for the whole window. (the bar may be part of the window or immediately following the window, depending on the use case).
+   - compare one market's value to other markets' values.
+
+   And within that, are a few types of comparisons...
+   - isMax / isMin / isEqual
+   - rank (maybe this includes isMax / isMin and such)
+   - bins/classes (includes quartiles and such. also includes pattern classifications?)
+   - ratio (this can only be used to compare two values)
+
+Any stage of the pipeline except stage 1 may occur multiple times to generate new features.
 
 ## Model Generation
 If we define all these operations as functions, then we can automate our model generation.

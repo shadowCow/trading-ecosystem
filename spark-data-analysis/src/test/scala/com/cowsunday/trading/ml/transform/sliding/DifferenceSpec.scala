@@ -9,8 +9,9 @@ import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
-import com.cowsunday.sparkdataanalysis.data.PriceBar
-import com.cowsunday.sparkdataanalysis.data.PriceType
+import com.cowsunday.trading.ml.data.PriceBar
+import com.cowsunday.trading.ml.data.PriceType
+import com.cowsunday.trading.ml.transform._
 import com.cowsunday.trading.ml.transform.bar._
 
 @RunWith(classOf[JUnitRunner])
@@ -25,15 +26,15 @@ class DifferenceSpec extends Specification with SparkBeforeAfter {
         new PriceBar(1,1.5,0.5,1, 20150105))
   val rdd = sc.parallelize(priceBars)
 
-  val doubleRdd = new Close().transform(rdd)
+  val doubleRdd = new Transforms().transformPriceData(rdd)(new BarTransforms().close)
 
   "Difference" should {
 
     "have correct values for different combinations of price type for window length 3" in {
       val length = 3
 
-      val closeClose = new Difference
-      val ccdiff = closeClose.transform(doubleRdd, length).take(3)
+      val transform = new SlidingTransforms().difference
+      val ccdiff = new Transforms().transformWindow(doubleRdd, length)(transform).take(3)
 
       ccdiff(0) mustEqual 1
       ccdiff(1) mustEqual -1
@@ -44,8 +45,8 @@ class DifferenceSpec extends Specification with SparkBeforeAfter {
     "have correct values for different combinations of price type for window length 2" in {
       val length = 2
 
-      val closeClose = new Difference
-      val ccdiff = closeClose.transform(doubleRdd, length).take(4)
+      val transform = new SlidingTransforms().difference
+      val ccdiff = new Transforms().transformWindow(doubleRdd, length)(transform).take(4)
 
       ccdiff(0) mustEqual -0.5
       ccdiff(1) mustEqual 1.5

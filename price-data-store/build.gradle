@@ -1,7 +1,0 @@
-task buildIt(dependsOn: ":data-model:buildIt") << {
-    println "- building price-data-store"
-}
-
-task runIt << {
-    println "- running price-data-store"
-}

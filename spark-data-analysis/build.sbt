@@ -2,7 +2,7 @@ name := "spark-data-analysis"
 
 version := "0.2.0"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.11.8"
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
 

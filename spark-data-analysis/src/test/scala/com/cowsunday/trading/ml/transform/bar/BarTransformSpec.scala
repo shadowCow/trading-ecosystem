@@ -6,7 +6,8 @@ import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.specs2.matcher.{ Expectable, Matcher }
 import com.cowsunday.trading.ml.SparkBeforeAfter
-import com.cowsunday.sparkdataanalysis.data.PriceBar
+import com.cowsunday.trading.ml.data.PriceBar
+import com.cowsunday.trading.ml.transform.Transforms
 import com.cowsunday.trading.ml.transform.bar._
 
 @RunWith(classOf[JUnitRunner])
@@ -20,8 +21,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
 
   "Bar transforms" should {
     "transform to high" in {
-      val transform = new High()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().high
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(5, 0.0001)
       results(1) must beCloseTo(4, 0.0001)
@@ -29,8 +30,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to low" in {
-      val transform = new Low()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().low
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(0.5, 0.0001)
       results(1) must beCloseTo(1.5, 0.0001)
@@ -38,8 +39,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "tranform to close" in {
-      val transform = new Close()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().close
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(3, 0.0001)
       results(1) must beCloseTo(2.5, 0.0001)
@@ -47,8 +48,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to open" in {
-      val transform = new Open()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().open
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(4, 0.0001)
       results(1) must beCloseTo(4, 0.0001)
@@ -56,8 +57,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to close high range" in {
-      val transform = new CloseHighRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().closeHighRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(2, 0.0001)
       results(1) must beCloseTo(1.5, 0.0001)
@@ -65,8 +66,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to close low range" in {
-      val transform = new CloseLowRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().closeLowRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(2.5, 0.0001)
       results(1) must beCloseTo(1, 0.0001)
@@ -74,8 +75,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to hi low range" in {
-      val transform = new HiLowRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().hiLowRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(4.5, 0.0001)
       results(1) must beCloseTo(2.5, 0.0001)
@@ -83,8 +84,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to open close change" in {
-      val transform = new OpenCloseChange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().openCloseChange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(-1, 0.0001)
       results(1) must beCloseTo(-1.5, 0.0001)
@@ -92,8 +93,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to open close range" in {
-      val transform = new OpenCloseRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().openCloseRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(1, 0.0001)
       results(1) must beCloseTo(1.5, 0.0001)
@@ -101,8 +102,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to open high range" in {
-      val transform = new OpenHighRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().openHighRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(1, 0.0001)
       results(1) must beCloseTo(0, 0.0001)
@@ -110,8 +111,8 @@ class BarTransformSpec extends Specification with SparkBeforeAfter {
     }
 
     "transform to open low range" in {
-      val transform = new OpenLowRange()
-      val results = transform.transform(rdd).take(3)
+      val transform = new BarTransforms().openLowRange
+      val results = new Transforms().transformPriceData(rdd)(transform).take(3)
 
       results(0) must beCloseTo(3.5, 0.0001)
       results(1) must beCloseTo(2.5, 0.0001)

@@ -1,1 +1,0 @@
-include 'data-model', 'price-data-store', 'price-data-analysis', 'backtester', 'option-optimizer', 'pattern-searcher', 'visualization'
