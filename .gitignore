@@ -1,8 +1,11 @@
 target
+target/
 .DS_Store
+.idea
 .cache
 .cache-main
 .cache-tests
 .project
 .classpath
 .settings
+spark-data-analysis.iml
