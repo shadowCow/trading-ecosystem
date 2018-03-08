@@ -5,75 +5,76 @@ tradable prices: opens, midprices
 
 
 things to predict:
--did the market stay above a price for a certain period of time?
--did the market stay below a price for a certain period of time?
--did the market stay within a range for a certain period of time?
--did the market exceed a range within a certain period of time?
--did the market go up?   (useless?)
--did the market go down? (useless?)
--did the market go up/down by x times as much as a normalizing value?
+- did the market stay above a price for a certain period of time?
+- did the market stay below a price for a certain period of time?
+- did the market stay within a range for a certain period of time?
+- did the market exceed a range within a certain period of time?
+- did the market go up?   (useless?)
+- did the market go down? (useless?)
+- did the market go up/down by x times as much as a normalizing value?
+  
   normalizing values:
-  -up -> open-low range
-  -down -> open-high range
-  -either -> previous bar open/close range
-  -either -> previous bar high/low range
-  -either -> previous multi-bar range
-  -either -> average range over past y bars
--was the market price change in the top x of the past y days?
--was the market price change in the bottom x of the past y days?
--was the market price range in the top x of the past y days?
--was the market price range in the bottom x of the past y days?
+  - up -> open-low range
+  - down -> open-high range
+  - either -> previous bar open/close range
+  - either -> previous bar high/low range
+  - either -> previous multi-bar range
+  - either -> average range over past y bars
+- was the market price change in the top x of the past y days?
+- was the market price change in the bottom x of the past y days?
+- was the market price range in the top x of the past y days?
+- was the market price range in the bottom x of the past y days?
 
 ^ these are the classifications.  we can either do yes/no for each one, or we can have bins (e.g. 2to1 gain, 3to1 gain, 4to1 gain, etc)
 
 metrics to use for prediction:
-(done)-largest price change in x periods? (done)
-(done)-rank of price change out of past x periods? (done)
-(done)-series of largest price changes (done)
-(done)-smallest price change in x periods? (done)
--series of smallest price changes in x periods
--sequence of smallest/largest price changes
-(done)-first up day in x periods (done)
-(done)-first down day in x periods (done)
-(done)-smallest up day in series of up days (done)
-(done)-smallest down day in series of down days (done)
-(done)-largest up day in series of up days (done)
-(done)-largest down day in series of down days (done)
-(done)-price change bigger than range of past x periods (done)
--up day bigger than range of past x periods
--down day bigger than range of past x periods
--first up day bigger than any down day in x periods
--first down day bigger than any up day in x periods
-(done)-highest price in past x periods (done)
-(done)-lowest price in past x periods (done)
--count of new highs made in past x periods
--count of new lows made in past x periods
-(done)-ratio of open-close range to high-low range (done)
--ratio of up movement to down movement in past periods (i.e. sum(close - open for up bars) / sum(open - close for down bars))
--ratio of (close - open) to:
-  -previous (close - open)
-  -previous range (multibar or average)
--ratio of (|open - previous open|) to:
-  -previous (close - open)
-  -previous range (multibar or average)
+- (done) largest price change in x periods? (done)
+- (done) rank of price change out of past x periods? (done)
+- (done) series of largest price changes (done)
+- (done) smallest price change in x periods? (done)
+- series of smallest price changes in x periods
+- sequence of smallest/largest price changes
+- (done) first up day in x periods (done)
+- (done) first down day in x periods (done)
+- (done) smallest up day in series of up days (done)
+- (done) smallest down day in series of down days (done)
+- (done) largest up day in series of up days (done)
+- (done) largest down day in series of down days (done)
+- (done) price change bigger than range of past x periods (done)
+- up day bigger than range of past x periods
+- down day bigger than range of past x periods
+- first up day bigger than any down day in x periods
+- first down day bigger than any up day in x periods
+- (done) highest price in past x periods (done)
+- (done) lowest price in past x periods (done)
+- count of new highs made in past x periods
+- count of new lows made in past x periods
+- (done) ratio of open-close range to high-low range (done)
+- ratio of up movement to down movement in past periods (i.e. sum(close - open for up bars) / sum(open - close for down bars))
+- ratio of (close - open) to:
+  - previous (close - open)
+  - previous range (multibar or average)
+- ratio of (|open - previous open|) to:
+  - previous (close - open)
+  - previous range (multibar or average)
 
 we can combine these metrics as well.
 
 -------------- new stuff -------------------
 
 a few types of operators...
--rank          (ordered index - includes things like smallest, largest, etc)
--reduce        (function of several values yielding one value)
--transform     (map set of values to a new set of values)
+- rank          (ordered index - includes things like smallest, largest, etc)
+- reduce        (function of several values yielding one value)
+- transform     (map set of values to a new set of values)
 
 also, we have single values vs windows...
 e.g. biggest single period price change vs. biggest 3 period price change (sliding window)
 
 everything needs to be normalized across markets.  so raw values don't do a lot of good.  
 so what translates well across markets....
--rank		   (biggest / smallest value from last x days)
--bins          (top x% of values)
--any normalized value really... (like ratios - day x was 3.2 times the size of day x-1)
+- rank		   (biggest / smallest value from last x days)
+- bins          (top x% of values)
+- any normalized value really... (like ratios - day x was 3.2 times the size of day x-1)
 
 ## Single Bar Pipeline
 A single bar pipeline starts with a series of raw price bars.

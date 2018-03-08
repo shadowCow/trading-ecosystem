@@ -1,1 +1,0 @@
-- need to rewrite all the transformations to use DataFrames instead of RDD.  Keep PriceBar though, as that is the 'type' for each row.
