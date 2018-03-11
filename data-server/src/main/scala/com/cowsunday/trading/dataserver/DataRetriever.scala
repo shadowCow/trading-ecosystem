@@ -1,23 +1,30 @@
 package com.cowsunday.trading.dataserver
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.io.Source
 
-case class DataPoint(x: Int, y: Int)
-case class DataPoints(dataPoints: Seq[DataPoint])
+case class DataPoint(x: Double, y: Double)
+case class DataPoints(xName: String, yName: String, dataPoints: Seq[DataPoint])
 
 object DataRetriever {
 
+  val latestResultsFilePath = "../analysis-results/latestResults.csv"
+  val delimiter = ","
+
   // (fake) async data grab
-  def fetchData(): Future[Option[DataPoints]] = Future {
+  def fetchLatestData()(implicit ec: ExecutionContext): Future[Option[DataPoints]] = Future {
 
-    val dummyData = (0 until 30).map(i => {
-      val x = math.random * 100
-      val y = math.random * 100
+    val headers: Seq[String] = Source.fromFile(latestResultsFilePath).getLines.take(1).flatMap(line => {
+      line.split(delimiter)
+    }).toSeq
+    // in-memory sequence - hope we dont get too much data... :)
+    val data: Seq[DataPoint] = Source.fromFile(latestResultsFilePath).getLines.drop(1).map(line => {
+      val values = line.split(delimiter)
 
-      DataPoint(x.toInt,y.toInt)
-    })
+      DataPoint(values(0).toDouble, values(1).toDouble)
+    }).toSeq
 
-    Option(DataPoints(dummyData))
+    Option(DataPoints(headers(0), headers(1), data))
   }
 
 }

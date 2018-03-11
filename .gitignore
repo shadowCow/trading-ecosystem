@@ -1,5 +1,6 @@
 target
 target/
+analysis-results
 .DS_Store
 .idea
 .cache

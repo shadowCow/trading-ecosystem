@@ -22,7 +22,7 @@ object DataServer extends CorsSupport {
   implicit val executionContext = system.dispatcher
 
   implicit val dataPointFormat = jsonFormat2(DataPoint)
-  implicit val dataPointsFormat = jsonFormat1(DataPoints)
+  implicit val dataPointsFormat = jsonFormat3(DataPoints)
 
 
   def main(args: Array[String]): Unit = {
@@ -30,7 +30,7 @@ object DataServer extends CorsSupport {
     val route: Route =
       get {
         path("latest-data") {
-          val maybeData: Future[Option[DataPoints]] = DataRetriever.fetchData()
+          val maybeData: Future[Option[DataPoints]] = DataRetriever.fetchLatestData()
 
           onSuccess(maybeData) {
             case Some(data) => complete(data)
@@ -40,8 +40,8 @@ object DataServer extends CorsSupport {
       }
 
     val bindingFuture = Http().bindAndHandle(corsHandler(route), "localhost", 8090)
-    println(s"Data server online at localhost:8090\nPress RETURN to stop...")
-    StdIn.readLine()
+    println(s"Data server online at localhost:8090...")
+    while(true) {}
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())

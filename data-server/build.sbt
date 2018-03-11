@@ -13,4 +13,6 @@ libraryDependencies ++= Seq(
   "io.spray" %%  "spray-json" % "1.3.3"
 )
 
-addCommandAlias("serveData", "sbt runMain com.cowsunday.trading.dataserver.DataServer")
+addCommandAlias("serveData", "~runMain com.cowsunday.trading.dataserver.DataServer")
+
+mainClass in reStart := Some("com.cowsunday.trading.dataserver.DataServer")
