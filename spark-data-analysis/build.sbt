@@ -23,3 +23,6 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
     case x => MergeStrategy.first
   }
 }
+
+
+addCommandAlias("onDemand", "runMain com.cowsunday.trading.ml.ondemand.OnDemandAnalysis")

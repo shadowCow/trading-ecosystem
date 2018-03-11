@@ -8,7 +8,7 @@ case class DataPoints(xName: String, yName: String, dataPoints: Seq[DataPoint])
 
 object DataRetriever {
 
-  val latestResultsFilePath = "../analysis-results/latestResults.csv"
+  val latestResultsFilePath = "../analysis-results/latestResults/latestResults.csv"
   val delimiter = ","
 
   // (fake) async data grab
