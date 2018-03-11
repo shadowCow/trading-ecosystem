@@ -14,7 +14,11 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.12",
   "org.slf4j" % "slf4j-log4j12" % "1.7.12",
   "org.scalanlp" %% "breeze" % "0.10",
-  "org.specs2" %% "specs2" % "3.7" % "test"
+  "org.specs2" %% "specs2" % "3.7" % "test",
+  "com.typesafe.akka" %% "akka-http"   % "10.1.0",
+  "com.typesafe.akka" %% "akka-stream" % "2.5.11",
+  "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.0",
+  "io.spray" %%  "spray-json" % "1.3.3"
 )
 
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
@@ -26,3 +30,6 @@ mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
 
 
 addCommandAlias("onDemand", "runMain com.cowsunday.trading.ml.ondemand.OnDemandAnalysis")
+addCommandAlias("transformServer", "runMain com.cowsunday.trading.ml.ondemand.TransformServer")
+
+mainClass in reStart := Some("com.cowsunday.trading.ml.ondemand.TransformServer")
