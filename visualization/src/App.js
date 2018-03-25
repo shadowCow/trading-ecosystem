@@ -80,11 +80,11 @@ class App extends Component {
   render() {
     return (
       <div>
+        <StatusBar statusMessage={this.state.statusMessage} isWorking={this.state.isLoadingChartData}/>
         <div className="my-flex-container">
           <ChartPanel chartData={this.state.chartData}/>
           <CommandPanel submitTransformRequest={this.submitTransformRequest}/>
         </div>
-        <StatusBar statusMessage={this.state.statusMessage} isWorking={this.state.isLoadingChartData}/>
       </div>
 
     );
@@ -197,7 +197,7 @@ class StatusBar extends Component {
   render() {
     const statusMessage = this.props.statusMessage || 'Ready';
     return (
-      <div className="my-flex-container">
+      <div className="status-bar">
         <span>Status: </span><span>{statusMessage}</span>
         {this.props.isWorking &&
           <Spinner name="circle" color="blue"/>

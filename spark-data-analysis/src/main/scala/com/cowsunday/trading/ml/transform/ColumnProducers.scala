@@ -10,21 +10,25 @@ object ColumnProducers {
   val tickSize = 0.05
 
   import com.cowsunday.trading.ml.data.PriceDataSchemas.v1._
+  import VariableTypes._
 
   val hlRange = NamedTransform(
     s"$high-$low-range",
+    Continuous,
     (df) => {
       df.col(high) - df.col(low)
     })
 
   val ocRange = NamedTransform(
     s"$open-$close-range",
+    Continuous,
     (df) => {
       abs(df.col(open) - df.col(close))
     })
 
   val ohRange = NamedTransform(
     s"$open-$high-range",
+    Continuous,
     (df) => {
       df.col(high) - df.col(open)
     }
@@ -32,6 +36,7 @@ object ColumnProducers {
 
   val olRange = NamedTransform(
     s"$open-$low-range",
+    Continuous,
     (df) => {
       df.col(open) - df.col(low)
     }
@@ -39,6 +44,7 @@ object ColumnProducers {
 
   val chRange = NamedTransform(
     s"$close-$high-range",
+    Continuous,
     (df) => {
       df.col(high) - df.col(close)
     }
@@ -46,6 +52,7 @@ object ColumnProducers {
 
   val clRange = NamedTransform(
     s"$close-$low-range",
+    Continuous,
     (df) => {
       df.col(close) - df.col(low)
     }
@@ -53,6 +60,7 @@ object ColumnProducers {
 
   val ocChange = NamedTransform(
     s"$open-$close-change",
+    Continuous,
     (df) => {
       df.col(close) - df.col(open)
     }
@@ -60,6 +68,7 @@ object ColumnProducers {
 
   val ocolRangeRatio = NamedTransform(
     s"$open-$close-$open-$low-rangeRatio",
+    Continuous,
     (df) => {
       val ol = olRange.transform(df)
       // dont want to divide by zero.
@@ -71,6 +80,7 @@ object ColumnProducers {
 
   val ocohRangeRatio = NamedTransform(
     s"$open-$close-$open-$high-rangeRatio",
+    Continuous,
     (df) => {
       val oh = ohRange.transform(df)
       // dont want to divide by zero.
@@ -82,47 +92,51 @@ object ColumnProducers {
 
   val upBodyOpeningGap = NamedTransform(
     "upBodyOpeningGap",
+    Binary,
     (df) => {
       val window = Window.orderBy(date)
 
-      val laggedOpen = lag(open,1,0).over(window)
-      val laggedClose = lag(close,1,0).over(window)
+      val laggedOpen = lag(df.col(open),1,0).over(window)
+      val laggedClose = lag(df.col(close),1,0).over(window)
 
-      when(col(open) > laggedOpen && col(open) > laggedClose, 1.0).otherwise(0.0)
+      when(df.col(open) > laggedOpen && df.col(open) > laggedClose, 1.0).otherwise(0.0)
     }
   )
 
   val downBodyOpeningGap = NamedTransform(
     "downBodyOpeningGap",
+    Binary,
     (df) => {
       val window = Window.orderBy(date)
 
-      val laggedOpen = lag(open,1,0).over(window)
-      val laggedClose = lag(close,1,0).over(window)
+      val laggedOpen = lag(df.col(open),1,0).over(window)
+      val laggedClose = lag(df.col(close),1,0).over(window)
 
-      when(col(open) < laggedOpen && col(open) < laggedClose, 1.0).otherwise(0.0)
+      when(df.col(open) < laggedOpen && df.col(open) < laggedClose, 1.0).otherwise(0.0)
     }
   )
 
   val upWickOpeningGap = NamedTransform(
     "upWickOpeningGap",
+    Binary,
     (df) => {
       val window = Window.orderBy(date)
 
-      val laggedHigh = lag(high,1,0).over(window)
+      val laggedHigh = lag(df.col(high),1,0).over(window)
 
-      when(col(open) > laggedHigh, 1.0).otherwise(0.0)
+      when(df.col(open) > laggedHigh, 1.0).otherwise(0.0)
     }
   )
 
   val downWickOpeningGap = NamedTransform(
     "downWickOpeningGap",
+    Binary,
     (df) => {
       val window = Window.orderBy(date)
 
-      val laggedLow = lag(low,1,0).over(window)
+      val laggedLow = lag(df.col(low),1,0).over(window)
 
-      when(col(open) < laggedLow, 1.0).otherwise(0.0)
+      when(df.col(open) < laggedLow, 1.0).otherwise(0.0)
     }
   )
 
@@ -144,4 +158,10 @@ object ColumnProducers {
 
 }
 
-case class NamedTransform(name: String, transform: DataFrame => Column)
+object VariableTypes extends Enumeration {
+  val Binary, Multiclass, Continuous = Value
+}
+
+case class NamedTransform(name: String,
+                          outputType: VariableTypes.Value,
+                          transform: DataFrame => Column)

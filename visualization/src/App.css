@@ -30,3 +30,9 @@
 .my-flex-container {
   display: flex;
 }
+
+.status-bar {
+  display: inline-block;
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+}
