@@ -34,18 +34,9 @@ Performance is less important than robustness.  Given some decision model, (in)s
 Are we just separating the input space into 3 regions? (the -1, 0, and 1 regions).
 In which case, maybe the goal is to find the separation that is some combination of...
 - maximum reward
-- minimum number separating planes (or curves)
-- maximum distance between points in regions and their boundaries
+- minimum number separating planes (or curves) - less overfitting
+- maximum distance between points in regions and their boundaries - more robust
 
-##### maximum reward
-Better performance!
-
-##### minimum number of separating planes (or curves)
-The fewer number of separating planes we have, the less overfitting we do.
-
-##### maximum distance between points in regions and their boundaries
-This means the model is 'less sensitive', i.e. small changes won't affect the performance much.
-The distance measure should be weighted by the reward for a given point.
 
 
 ### (Hyper) Parameters
@@ -69,3 +60,19 @@ Stage 1 seems like a Spark thing at the moment.
 Stage 2 seems like a TensorFlow or DeepLearning4J thing.
 Stage 3 seems like either part of Stage 2 framework or maybe back to Spark.
 Stage 4 seems like a MongoDB thing.
+
+### Next
+Well, maybe we forget optimality and fancy techniques and make this simple...
+
+We need...
+- A way to specify the structure of the decision model such that there are adjustable parameters.
+- A way to evaluate the model for a given parameter set.
+- A way to search the parameter space for 'good' models.
+
+Then we just save the good models.
+
+That doesn't need to be complicated.
+
+What we need is a flexible enough way of defining the decision model such that we can automate a broad search for something that works.
+
+And then we need a GOOD evaluation procedure.
